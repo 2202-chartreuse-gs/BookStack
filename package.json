@@ -1,7 +1,7 @@
 {
-  "name": "fs-app-template",
-  "version": "2.0.0",
-  "description": "Some boilerplate code to get you started - get shakin'!",
+  "name": "book-stack",
+  "version": "1.0.0",
+  "description": "eBook commerce store",
   "main": "index.js",
   "scripts": {
     "build": "webpack",

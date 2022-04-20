@@ -3,13 +3,15 @@ const db = require('../db')
 
 const Product = db.define('product', {
   imageURL: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     defaultValue:
       'https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg',
+    validate: { isUrl: true, },
   },
   productURL: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: false,
+    validate: { isUrl: true, },
   },
   title: {
     type: Sequelize.STRING,

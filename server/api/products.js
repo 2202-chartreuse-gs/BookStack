@@ -1,12 +1,14 @@
 const router = require('express').Router()
-// const { models: { User }} = require('../db') <- get export format from db
+const {
+  models: { Product },
+} = require('../db')
 module.exports = router
 
 // GET /api/products/
 // Access: All users
 router.get('/', async (req, res, next) => {
   try {
-    const allProducts = await Products.findAll()
+    const allProducts = await Product.findAll()
     res.send(allProducts)
   } catch (error) {
     next(error)
@@ -17,7 +19,7 @@ router.get('/', async (req, res, next) => {
 // Access: All users
 router.get('/:id', async (req, res, next) => {
   try {
-    const singleProduct = await Products.findByPk(req.params.id)
+    const singleProduct = await Product.findByPk(req.params.id)
     singleProduct ? res.send(singleProduct) : res.sendStatus(404)
   } catch (error) {
     next(error)
@@ -28,7 +30,7 @@ router.get('/:id', async (req, res, next) => {
 // Access: Admins only
 router.post('/', async (req, res, next) => {
   try {
-    res.status(201).send(await Products.create(req.body))
+    res.status(201).send(await Product.create(req.body))
   } catch (error) {
     next(error)
   }
@@ -38,7 +40,7 @@ router.post('/', async (req, res, next) => {
 // Access: Admins only
 router.put('/:id', async (req, res, next) => {
   try {
-    const product = await Products.findByPk(req.params.id)
+    const product = await Product.findByPk(req.params.id)
     await product.update(req.body)
     res.send(product)
   } catch (error) {
@@ -50,7 +52,7 @@ router.put('/:id', async (req, res, next) => {
 // Access: Admins only
 router.delete('/:id', async (req, res, next) => {
   try {
-    const product = await Products.findByPk(req.params.id)
+    const product = await Product.findByPk(req.params.id)
     await product.destroy()
     res.send(product)
   } catch (error) {

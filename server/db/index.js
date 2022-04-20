@@ -7,8 +7,11 @@ const Cart = require('./models/Cart')
 const Product = require('./models/Product')
 
 //associations
-User.hasMany(Product)
-Product.belongsToMany(User)
+
+
+// Not sure there needs to be a Product to User association? 
+// User.hasMany(Product)
+// Product.belongsToMany(User)
 
 Cart.hasMany(Product)
 Product.belongsToMany(Cart)

@@ -6,12 +6,12 @@ const Product = db.define('product', {
     type: Sequelize.TEXT,
     defaultValue:
       'https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg',
-    validate: { isUrl: true, },
+    validate: { isUrl: true },
   },
   productURL: {
     type: Sequelize.TEXT,
     allowNull: false,
-    validate: { isUrl: true, },
+    validate: { isUrl: true },
   },
   title: {
     type: Sequelize.STRING,
@@ -22,8 +22,8 @@ const Product = db.define('product', {
     allowNull: false,
   },
   price: {
-    type: Sequelize.DECIMAL(10, 2),
-    defaultValue: 9.99,
+    type: Sequelize.INTEGER,
+    defaultValue: 999,
   },
   description: {
     type: Sequelize.TEXT,

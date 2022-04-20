@@ -1,12 +1,14 @@
 const router = require('express').Router()
-// const { models: { Users }} = require('../db') <- get export format from db
+const {
+  models: { User },
+} = require('../db')
 module.exports = router
 
 // GET /api/users/
 // Access: Admin only
 router.get('/', async (req, res, next) => {
   try {
-    const allUsers = await Users.findAll()
+    const allUsers = await User.findAll()
     res.send(allUsers)
   } catch (error) {
     next(error)
@@ -14,11 +16,10 @@ router.get('/', async (req, res, next) => {
 })
 
 // GET /api/users/:id
-// Access: Admin only
-// Possible User feature for later tier.
+// Access: Admin and specific user
 router.get('/:id', async (req, res, next) => {
   try {
-    const singleUser = await Users.findByPk(req.params.id)
+    const singleUser = await User.findByPk(req.params.id)
     singleUser ? res.send(singleUser) : res.sendStatus(404)
   } catch (error) {
     next(error)
@@ -29,30 +30,29 @@ router.get('/:id', async (req, res, next) => {
 // Access: visitors only if they decide to create an account
 router.post('/', async (req, res, next) => {
   try {
-    res.status(201).send(await Users.create(req.body))
+    res.status(201).send(await User.create(req.body))
   } catch (error) {
     next(error)
   }
 })
 
 // PUT /api/users/:id
-// Access: Specific user only?
-// Possible tier 2 feature
-// router.put('/:id', async (req, res, next) => {
-//   try {
-//     const userToEdit = await Users.findByPk(req.params.id)
-//     await userToEdit.update(req.body)
-//     res.send(userToEdit)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+// Access: Specific user only
+router.put('/:id', async (req, res, next) => {
+  try {
+    const userToEdit = await User.findByPk(req.params.id)
+    await userToEdit.update(req.body)
+    res.send(userToEdit)
+  } catch (error) {
+    next(error)
+  }
+})
 
 // DELETE /api/user/:id
 // Access: Admins only
 router.delete('/:id', async (req, res, next) => {
   try {
-    const userToDelete = await Users.findByPk(req.params.id)
+    const userToDelete = await User.findByPk(req.params.id)
     await userToDelete.destroy()
     res.send(userToDelete)
   } catch (error) {

@@ -1,12 +1,36 @@
 const router = require('express').Router()
-// const { models: { User }} = require('../db') <- get export format from db
+const {
+  models: { Order },
+} = require('../db')
 module.exports = router
 
-// GET /api/cart/:id
+// Cart route
+// GET /api/order/:id/cart
 // Access: User only
-router.get('/:id', async (req, res, next) => {
+router.get('/:id/cart', async (req, res, next) => {
   try {
-    const usersCart = await Cart.findByPk(req.params.id)
+    const usersCart = await Order.findAll({
+      where: {
+        userID: req.params.id,
+        isComplete: false,
+      },
+    })
+    res.send(usersCart)
+  } catch (err) {
+    next(err)
+  }
+})
+// Order history route
+// GET /api/order/:id
+// Access: User only
+router.get('/cart/:id', async (req, res, next) => {
+  try {
+    const usersCart = await Order.findAll({
+      where: {
+        userID: req.params.id,
+        isComplete: false,
+      },
+    })
     res.send(usersCart)
   } catch (err) {
     next(err)

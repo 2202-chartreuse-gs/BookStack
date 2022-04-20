@@ -1,6 +1,10 @@
+'use strict'
+
 const hipsum = require('lorem-hipsum')
-const { db, User, Product, Cart } = require('../server/db')
-import productSeed from './productSeed.js'
+const {
+  db,
+  models: { User, Product, Order },
+} = require('../server/db')
 
 const productDetails = () =>
   hipsum({
@@ -11,12 +15,51 @@ const productDetails = () =>
     format: 'plain',
   })
 
+const productArray = [
+  {
+    productURL: 'https://www.gutenberg.org/ebooks/84',
+    imageURL: 'https://www.gutenberg.org/cache/epub/84/pg84.cover.medium.jpg',
+    title: 'Frankenstein; Or, The Modern Prometheus',
+    author: 'Mary Wollstonecraft Shelley',
+  },
+  {
+    productURL: 'https://www.gutenberg.org/ebooks/1342',
+    imageURL:
+      'https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg',
+    title: 'Pride and Prejudice',
+    author: 'Jane Austen',
+  },
+
+  {
+    productURL: 'https://www.gutenberg.org/ebooks/11',
+    imageURL: 'https://www.gutenberg.org/cache/epub/11/pg11.cover.medium.jpg',
+    title: "Alice's Adventures in Wonderland",
+    author: 'Lewis Carroll',
+  },
+
+  {
+    productURL: 'https://www.gutenberg.org/ebooks/64317',
+    imageURL:
+      'https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg',
+    title: 'The Great Gatsby',
+    author: 'F. Scott Fitzgerald',
+  },
+
+  {
+    productURL: 'https://www.gutenberg.org/ebooks/1661',
+    imageURL:
+      'https://www.gutenberg.org/cache/epub/1661/pg1661.cover.medium.jpg',
+    title: 'The Adventures of Sherlock Holmes',
+    author: 'Sir Arthur Conan Doyle',
+  },
+]
+
 const seed = async () => {
   await db.sync({ force: true })
 
   //Seeds the products
-  await Promise.all(
-    productSeed.map((product) => {
+  let products = await Promise.all(
+    productArray.map((product) => {
       return Product.create({ ...product, description: productDetails() })
     })
   )
@@ -100,32 +143,37 @@ const seed = async () => {
     password: 'pw123',
   })
 
-  //Seeds the carts
-  const bobbieCart = await bobbie.createCart([
-    { productId: 1, qty: 3 },
-    { productId: 3, qty: 1 },
-  ])
-  const alexCart = await alex.createCart([
-    { productId: 1, qty: 2 },
-    { productId: 2, qty: 5 },
-    { productId: 3, qty: 99 },
-  ])
-  const jamesCart = await james.createCart([{ productId: 5, qty: 5 }])
-  const caminaCart = await camina.createCart([
-    { productId: 4, qty: 2 },
-    { productId: 2, qty: 7 },
-  ])
-  const millerCart = await miller.createCart()
+  // Seed some orders
+  const bobbieCart = await bobbie.createOrder()
+  const amosCart = await amos.createOrder()
+
+  await bobbieCart.addProduct(products[0], { through: { qty: 3, price: 799 } })
+  await bobbieCart.addProduct(products[2], { through: { qty: 1, price: 299 } })
+  await bobbieCart.addProduct(products[4], { through: { qty: 13, price: 999 } })
+  await amosCart.addProduct(products[0], { through: { qty: 3, price: 799 } })
+  await amosCart.addProduct(products[2], { through: { qty: 1, price: 299 } })
+  await amosCart.addProduct(products[4], { through: { qty: 13, price: 999 } })
 
   db.close()
   console.log(`Seeding success!`)
 }
 
-seed().catch((err) => {
-  db.close()
-  console.log(`
-      Error seeding:
-      ${err.message}
-      ${err.stack}
-    `)
-})
+async function runSeed() {
+  console.log('seeding...')
+  try {
+    await seed()
+  } catch (err) {
+    console.error(err)
+    process.exitCode = 1
+  } finally {
+    console.log('closing db connection')
+    await db.close()
+    console.log('db connection closed')
+  }
+}
+
+if (module === require.main) {
+  runSeed()
+}
+
+module.exports = seed

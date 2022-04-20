@@ -37,9 +37,13 @@ const productSeed = [
   },
 ]
 
-export default productSeed
+// module.exports = {
+//   getProductArray: function (productSeed) {
+//     return productSeed
+//   },
+// }
 
-export const bigProductSeed = [
+const bigProductSeed = [
   {
     productURL: 'https://www.gutenberg.org/ebooks/84',
     imageURL: 'https://www.gutenberg.org/cache/epub/84/pg84.cover.medium.jpg',

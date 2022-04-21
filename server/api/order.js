@@ -28,7 +28,7 @@ router.get('/cart/:id', async (req, res, next) => {
     const usersCart = await Order.findAll({
       where: {
         userID: req.params.id,
-        isComplete: false,
+        isComplete: true,
       },
     })
     res.send(usersCart)

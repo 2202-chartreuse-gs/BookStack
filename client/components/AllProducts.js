@@ -1,13 +1,29 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchProducts } from '../store/products'
 
-export default AllProducts = () => {
-  const dispatch = useDispatch();
+const AllProducts = () => {
+  const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(setProducts());
-  }, []);
-    let { products } = useSelector((state) => state.products);
+    dispatch(fetchProducts())
+  }, [])
+  let products = useSelector((state) => state.products)
+  console.log(products)
   return (
-
+    <div>
+      <ol>
+        {products ? (
+          products.map((product) => (
+            <li key={product.id}>
+              {product.id}: {product.title}
+            </li>
+          ))
+        ) : (
+          <li>No products found.</li>
+        )}
+      </ol>
+    </div>
   )
 }
+
+export default AllProducts

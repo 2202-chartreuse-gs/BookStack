@@ -8,16 +8,11 @@ const AllProducts = () => {
     dispatch(fetchProducts())
   }, [])
   let products = useSelector((state) => state.products)
-  console.log(products)
   return (
     <div>
       <ol>
         {products ? (
-          products.map((product) => (
-            <li key={product.id}>
-              {product.id}: {product.title}
-            </li>
-          ))
+          products.map((product) => <li key={product.id}>{product.title}</li>)
         ) : (
           <li>No products found.</li>
         )}

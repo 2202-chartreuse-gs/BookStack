@@ -2,13 +2,21 @@ const router = require('express').Router()
 const {
   models: { User },
 } = require('../db')
+const { validateToken } = require('./authMiddleware')
 module.exports = router
 
 // GET /api/users/
 // Access: Admin only
-router.get('/', async (req, res, next) => {
+router.get('/', validateToken, async (req, res, next) => {
   try {
-    const allUsers = await User.findAll()
+    const { isAdmin } = await User.findByToken(req.headers.authorization)
+    if (isAdmin !== true) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    const allUsers = await User.findAll({
+      attributes: ['id', 'email']
+    })
     res.send(allUsers)
   } catch (error) {
     next(error)

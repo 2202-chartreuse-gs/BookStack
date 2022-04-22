@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchProducts } from '../store/products'
+import { fetchAllUsers } from '../store/users'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import CameraIcon from '@material-ui/icons/PhotoCamera'
@@ -53,47 +53,52 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const AllProducts = () => {
+const AllUsers = () => {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchProducts())
+    dispatch(fetchAllUsers())
   }, [])
-  let products = useSelector((state) => state.products)
+  let users = useSelector((state) => state.users)
   const classes = useStyles()
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
-        {products ? (
-          products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4}>
-              <Link href={'/products/' + product.id}>
+        {users ? (
+          users.map((user) => (
+            <Grid item key={user.id} xs={12} sm={6} md={4}>
+              <Link href={'/users/' + user.id}>
                 <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={product.imageURL}
-                    title={product.title + ' cover'}
-                  />
+                  {/* <CardMedia
+                      className={classes.cardMedia}
+                      image={product.imageURL}
+                      title={product.title + ' cover'}
+                    /> */}
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      {product.title}
+                      {user.fullName}
                     </Typography>
-                    <Typography>By {product.author}</Typography>
+                    <Typography>
+                      {user.isAdmin ? 'Administrator' : 'Customer'}
+                    </Typography>
                   </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      View
-                    </Button>
-                  </CardActions>
+                  {/* <CardActions>
+                      <Button size="small" color="primary">
+                        View
+                      </Button>
+                    </CardActions> */}
                 </Card>
               </Link>
             </Grid>
           ))
         ) : (
-          <h5>No Products Found</h5>
+          <h5>
+            No users found. You may not have the necessary credentials to view
+            this page.
+          </h5>
         )}
       </Grid>
     </Container>
   )
 }
 
-export default AllProducts
+export default AllUsers

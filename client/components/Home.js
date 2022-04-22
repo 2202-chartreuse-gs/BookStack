@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import Link from '@material-ui/core/Link'
+import AllProducts from './AllProducts'
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -79,19 +80,22 @@ export const Home = (props) => {
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justifyContent="center">
               <Grid item>
-                <Button variant="contained" color="primary">
-                  Main call to action
-                </Button>
+                <Link href="/products/">
+                  <Button variant="contained" color="primary">
+                    View ALl Products
+                  </Button>
+                </Link>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Button variant="outlined" color="primary">
                   Secondary action
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
           </div>
         </Container>
       </div>
+      <AllProducts />
     </div>
   )
 }

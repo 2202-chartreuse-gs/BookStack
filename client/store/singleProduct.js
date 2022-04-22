@@ -25,7 +25,7 @@ const initialState = {}
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_SINGLE_PRODUCT:
-      return action.product
+      return { ...action.product }
     default:
       return state
   }

@@ -10,12 +10,20 @@ module.exports = router
 router.get('/', validateToken, async (req, res, next) => {
   try {
     const { isAdmin } = await User.findByToken(req.headers.authorization)
+    console.log(req.headers.authorization)
+    console.log(req.headers.authorization)
     if (isAdmin !== true) {
       return res.status(401).json({ error: 'Unauthorized' })
     }
-
     const allUsers = await User.findAll({
-      attributes: ['id', 'email']
+      attributes: [
+        'id',
+        'email',
+        'firstName',
+        'lastName',
+        'fullName',
+        'isAdmin',
+      ],
     })
     res.send(allUsers)
   } catch (error) {

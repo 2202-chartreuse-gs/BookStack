@@ -11,7 +11,7 @@ router.get('/:id/cart', async (req, res, next) => {
   try {
     const usersCart = await Order.findAll({
       where: {
-        userID: req.params.id,
+        userId: req.params.id,
         isComplete: false,
       },
     })
@@ -23,17 +23,17 @@ router.get('/:id/cart', async (req, res, next) => {
 // Order history route
 // GET /api/order/:id
 // Access: User only
-router.get('/cart/:id', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
-    const usersCart = await Order.findAll({
+    const usersPurchases = await Order.findAll({
       where: {
-        userID: req.params.id,
+        userId: req.params.id,
         isComplete: true,
       },
     })
     res.send(usersCart)
-  } catch (err) {
-    next(err)
+  } catch (error) {
+    next(error)
   }
 })
 

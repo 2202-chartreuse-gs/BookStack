@@ -11,7 +11,7 @@ const User = db.define('user', {
     type: Sequelize.STRING,
     unique: true,
     allowNull: false,
-    validate: {isEmail: true},
+    validate: { isEmail: true },
   },
   password: {
     type: Sequelize.STRING,
@@ -23,6 +23,17 @@ const User = db.define('user', {
   lastName: {
     type: Sequelize.STRING,
     allowNull: false,
+  },
+  fullName: {
+    type: Sequelize.DataTypes.VIRTUAL,
+    get() {
+      return this.firstName + ' ' + this.lastName
+    },
+    set() {
+      throw new Error(
+        'Cannot set VIRTUAL field fullName, try assigning firstName and lastName instead'
+      )
+    },
   },
   isAdmin: {
     type: Sequelize.BOOLEAN,
@@ -48,15 +59,15 @@ User.prototype.generateToken = function () {
  * classMethods
  */
 
-User.authenticate = async function({ email, password }){
-    const user = await this.findOne({where: { email }})
-    if (!user || !(await user.correctPassword(password))) {
-      const error = Error('Incorrect username/password');
-      error.status = 401;
-      throw error;
-    }
-    return user.generateToken();
-};
+User.authenticate = async function ({ email, password }) {
+  const user = await this.findOne({ where: { email } })
+  if (!user || !(await user.correctPassword(password))) {
+    const error = Error('Incorrect username/password')
+    error.status = 401
+    throw error
+  }
+  return user.generateToken()
+}
 
 User.findByToken = async function (token) {
   try {

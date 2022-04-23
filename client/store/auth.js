@@ -24,8 +24,8 @@ export const me = () => async dispatch => {
         authorization: token
       }
     })
-    // history.push('/products')
-    history.push('/home')
+    history.push('/products')
+    // history.push('/home')
     return dispatch(setAuth(res.data))
   }
 }

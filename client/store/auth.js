@@ -24,8 +24,6 @@ export const me = () => async dispatch => {
         authorization: token
       }
     })
-    history.push('/products')
-    // history.push('/home')
     return dispatch(setAuth(res.data))
   }
 }
@@ -34,7 +32,7 @@ export const authenticate = (firstName, lastName, email, password, method) => as
   try {
     const res = await axios.post(`/auth/${method}`, { firstName, lastName, email, password })
     window.localStorage.setItem(TOKEN, res.data.token)
-    // history.push('/home')
+    history.push('/home')
     dispatch(me())
   } catch (authError) {
     return dispatch(setAuth({error: authError}))

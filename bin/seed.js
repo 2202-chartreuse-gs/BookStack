@@ -1,7 +1,6 @@
 'use strict'
 
 const productSeed = require('./productSeed')
-console.dir(productSeed)
 
 const hipsum = require('lorem-hipsum')
 const {
@@ -18,53 +17,12 @@ const productDetails = () =>
     format: 'plain',
   })
 
-const productArray = [
-  {
-    productURL: 'https://www.gutenberg.org/ebooks/84',
-    imageURL: 'https://www.gutenberg.org/cache/epub/84/pg84.cover.medium.jpg',
-    title: 'Frankenstein; Or, The Modern Prometheus',
-    author: 'Mary Wollstonecraft Shelley',
-  },
-  {
-    productURL: 'https://www.gutenberg.org/ebooks/1342',
-    imageURL:
-      'https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg',
-    title: 'Pride and Prejudice',
-    author: 'Jane Austen',
-  },
-
-  {
-    productURL: 'https://www.gutenberg.org/ebooks/11',
-    imageURL: 'https://www.gutenberg.org/cache/epub/11/pg11.cover.medium.jpg',
-    title: "Alice's Adventures in Wonderland",
-    author: 'Lewis Carroll',
-  },
-
-  {
-    productURL: 'https://www.gutenberg.org/ebooks/64317',
-    imageURL:
-      'https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg',
-    title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
-  },
-
-  {
-    productURL: 'https://www.gutenberg.org/ebooks/1661',
-    imageURL:
-      'https://www.gutenberg.org/cache/epub/1661/pg1661.cover.medium.jpg',
-    title: 'The Adventures of Sherlock Holmes',
-    author: 'Sir Arthur Conan Doyle',
-  },
-]
-
 const seed = async () => {
   await db.sync({ force: true })
 
   //Seeds the products
   let products = await Promise.all(
-    productSeed.map((product, i) => {
-      console.log('i: ' + i)
-      console.log(product.author)
+    productSeed.map((product) => {
       return Product.create({ ...product, description: productDetails() })
     })
   )

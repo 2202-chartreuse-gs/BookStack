@@ -1,5 +1,8 @@
 'use strict'
 
+const productSeed = require('./productSeed')
+console.dir(productSeed)
+
 const hipsum = require('lorem-hipsum')
 const {
   db,
@@ -59,7 +62,9 @@ const seed = async () => {
 
   //Seeds the products
   let products = await Promise.all(
-    productArray.map((product) => {
+    productSeed.map((product, i) => {
+      console.log('i: ' + i)
+      console.log(product.author)
       return Product.create({ ...product, description: productDetails() })
     })
   )

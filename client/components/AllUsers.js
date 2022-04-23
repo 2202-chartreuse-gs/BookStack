@@ -66,28 +66,37 @@ const AllUsers = () => {
         {users ? (
           users.map((user) => (
             <Grid item key={user.id} xs={12} sm={6} md={4}>
-              <Link href={'/users/' + user.id}>
-                <Card className={classes.card}>
-                  {/* <CardMedia
+              <Card className={classes.card}>
+                {/* <CardMedia
                       className={classes.cardMedia}
                       image={product.imageURL}
                       title={product.title + ' cover'}
                     /> */}
-                  <CardContent className={classes.cardContent}>
+                <CardContent className={classes.cardContent}>
+                  <Link href={'/users/' + user.id}>
                     <Typography gutterBottom variant="h5" component="h2">
                       {user.fullName}
                     </Typography>
-                    <Typography>
-                      {user.isAdmin ? 'Administrator' : 'Customer'}
-                    </Typography>
-                  </CardContent>
-                  {/* <CardActions>
+                  </Link>
+                  <Link
+                    href={
+                      'mailto:' +
+                      user.email +
+                      '?subject=Your Account Has Been Hacked'
+                    }
+                  >
+                    <Typography>{user.email}</Typography>
+                  </Link>
+                  <Typography>
+                    {user.isAdmin ? 'Administrator' : 'Customer'}
+                  </Typography>
+                </CardContent>
+                {/* <CardActions>
                       <Button size="small" color="primary">
                         View
                       </Button>
                     </CardActions> */}
-                </Card>
-              </Link>
+              </Card>
             </Grid>
           ))
         ) : (

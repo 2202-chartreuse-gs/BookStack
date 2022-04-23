@@ -19,7 +19,6 @@ const Product = db.define('product', {
   },
   author: {
     type: Sequelize.STRING,
-    allowNull: false,
   },
   price: {
     type: Sequelize.INTEGER,

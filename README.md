@@ -29,15 +29,15 @@
   - [x] i.e. each customer that creates an account should only be able to do so once with a single email address._
 - [ ] have full rights to make backend requests to add, edit, and remove products.
   - [ ] No one else should have access._
-- [ ] view user information.
-  - [ ] No one else should have access._
+- [x] view user information.
+  - [x] No one else should have access._
 
 ### As an engineer, I want to:
 
-- [ ] have a well-seeded database so that I am able to simulate a number of different scenarios for the user stories below.
-  - [ ] By doing this, you really set yourselves up to tackle many of the points throughout the tiers. In the long run, this will save you, potentially, tons of time._
-  - [ ] _For example, seed hundreds of products with dummy data so that when you get to the “pagination” user story, you won’t have to worry about adding more products._
- - [ ] Likewise, add a bunch of users with products in their carts so editing the cart can be worked on without already having the “add to cart” functionality built out._
+- [x] have a well-seeded database so that I am able to simulate a number of different scenarios for the user stories below.
+  - [x] By doing this, you really set yourselves up to tackle many of the points throughout the tiers. In the long run, this will save you, potentially, tons of time._
+  - [x] For example, seed hundreds of products with dummy data so that when you get to the “pagination” user story, you won’t have to worry about adding more products.
+ - [x] Likewise, add a bunch of users with products in their carts so editing the cart can be worked on without already having the “add to cart” functionality built out._
 - [ ] user data to be secure so that no one can unrightfully manipulate information.
 
 ## TIER 2: E-Commerce Essentials

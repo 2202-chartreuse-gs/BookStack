@@ -32,7 +32,7 @@ router.get('/', validateToken, async (req, res, next) => {
 
 // GET /api/users/:id/orders
 // Access: Admin and specific user
-router.get('/:id', async (req, res, next) => {
+router.get('/:id/orders', async (req, res, next) => {
   try {
     const singleUser = await User.findOne({
       where: {
@@ -56,15 +56,53 @@ router.get('/:id', async (req, res, next) => {
         },
       ],
     })
-    // console.log('Users ordered products', usersOrder[0].products[0])
-    // be sure to add 2nd query as key
-    // specifically the current price and date?
     if (singleUser) {
       res.send({ user: singleUser, orders: usersOrder })
     } else {
       res.sendStatus(404)
     }
-    // singleUser ? res.send(singleUser) : res.sendStatus(404)
+  } catch (error) {
+    next(error)
+  }
+})
+
+//GET /api/users/:id/cart
+router.get('/:id/cart', async (req, res, next) => {
+  try {
+    const singleUser = await User.findOne({
+      where: {
+        id: req.params.id,
+      },
+      attributes: ['id', 'firstName', 'lastName'],
+    })
+    const usersCart = await Order.findAll({
+      where: {
+        userId: req.params.id,
+        isComplete: false,
+      },
+      attributes: [],
+      include: [
+        {
+          model: Product,
+          attributes: [
+            'id',
+            'imageURL',
+            'productURL',
+            'title',
+            'author',
+            'price',
+          ],
+          through: {
+            attributes: ['qty'],
+          },
+        },
+      ],
+    })
+    if (singleUser) {
+      res.send({ user: singleUser, cart: usersCart })
+    } else {
+      res.sendStatus(404)
+    }
   } catch (error) {
     next(error)
   }

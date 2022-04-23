@@ -162,7 +162,6 @@ const seed = async () => {
     through: { qty: 5, price: 999 },
   })
   await completedBobbieOrder.update({ isComplete: true })
-  console.log(completedBobbieOrder)
 
   db.close()
   console.log(`Seeding success!`)

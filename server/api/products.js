@@ -8,7 +8,9 @@ module.exports = router
 // Access: All users
 router.get('/', async (req, res, next) => {
   try {
-    const allProducts = await Product.findAll()
+    const allProducts = await Product.findAll({
+      attributes: ['id', 'title', 'author', 'price', 'imageURL'],
+    })
     res.send(allProducts)
   } catch (error) {
     next(error)

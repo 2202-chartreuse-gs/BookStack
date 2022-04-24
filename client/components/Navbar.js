@@ -2,34 +2,42 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { logout } from '../store'
+import { useSelector } from 'react-redux'
 
-const Navbar = ({ handleClick, isLoggedIn, isAdmin }) => (
-  <div>
-    <h1>FS-App-Template</h1>
-    <nav>
-      {isLoggedIn ? (
+const Navbar = ({ handleClick, isLoggedIn, isAdmin }) => {
+  let cart = useSelector((store) => store.cart)
+  return (
+    <div>
+      <h1>FS-App-Template</h1>
+      <nav>
+        {isLoggedIn ? (
+          <div>
+            <Link to="/home">Home</Link>
+            {/* The navbar will show these links after you log in */}
+            <a href="#" onClick={handleClick}>
+              Logout
+            </a>
+            <Link to="/products/">Products</Link>
+            {isAdmin ? <Link to="/users/">Users</Link> : null}
+          </div>
+        ) : (
+          <div>
+            {/* The navbar will show these links before you log in */}
+            <Link to="/home/">Home</Link>
+            <Link to="/products/">Products</Link>
+            <Link to="/login/">Login</Link>
+            <Link to="/signup/">Sign Up</Link>
+          </div>
+        )}
+
         <div>
-          <Link to="/home">Home</Link>
-          {/* The navbar will show these links after you log in */}
-          <a href="#" onClick={handleClick}>
-            Logout
-          </a>
-          <Link to="/products/">Products</Link>
-          {isAdmin ? <Link to="/users/">Users</Link> : null}
+          <Link to="/cart/">Cart({cart.totalItems})</Link>
         </div>
-      ) : (
-        <div>
-          {/* The navbar will show these links before you log in */}
-          <Link to="/home/">Home</Link>
-          <Link to="/products/">Products</Link>
-          <Link to="/login/">Login</Link>
-          <Link to="/signup/">Sign Up</Link>
-        </div>
-      )}
-    </nav>
-    <hr />
-  </div>
-)
+      </nav>
+      <hr />
+    </div>
+  )
+}
 
 /**
  * CONTAINER

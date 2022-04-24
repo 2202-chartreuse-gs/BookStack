@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchProducts } from '../store/products'
+import { setCart } from '../store/cart'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
-import CameraIcon from '@material-ui/icons/PhotoCamera'
+import IconButton from '@material-ui/core/IconButton'
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardActions from '@material-ui/core/CardActions'
@@ -43,9 +45,15 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  productPrice: {
+    paddingTop: '.5em',
   },
   cardActions: {
-    backgroundColor: 'chartreuse',
+    justifyContent: 'space-between',
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
@@ -54,38 +62,89 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const AllProducts = () => {
+  //allows dispatch to Redux store
   const dispatch = useDispatch()
+
+  //useEffect React hook
   useEffect(() => {
+    getAndSetLocalCart()
     dispatch(fetchProducts())
   }, [])
-  let products = useSelector((state) => state.products)
+
+  //useSelector hook pulls from Redux store
+  let { products, cart } = useSelector((store) => store)
+
+  //Material UI styles hook
   const classes = useStyles()
+
+  //this performs the basic function of adding to the cart in local storage, for use by users not logged in
+  const addToLocalCart = (productId, product, qty = 1) => {
+    const tempCart = { ...cart }
+    tempCart[productId]
+      ? (tempCart[productId].qty += qty)
+      : (tempCart[productId] = { ...product, qty })
+    tempCart.totalItems += qty
+    dispatch(setCart(tempCart))
+    if (window.localStorage) {
+      window.localStorage.setItem('bookStackCart', JSON.stringify(tempCart))
+    } else {
+      alert(
+        'Sorry, your browser does not support this feature. Try creating an account first.'
+      )
+    }
+  }
+
+  const getAndSetLocalCart = () => {
+    if (window.localStorage && window.localStorage.getItem('bookStackCart')) {
+      let browserCart = window.localStorage.getItem('bookStackCart')
+      browserCart = JSON.parse(browserCart)
+      dispatch(setCart(browserCart))
+    }
+  }
+
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
         {products ? (
           products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4}>
-              <Link href={'/products/' + product.id}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={product.imageURL}
-                    title={product.title + ' cover'}
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {product.title}
-                    </Typography>
-                    <Typography>By {product.author}</Typography>
-                  </CardContent>
-                  <CardActions>
+              <Card className={classes.card}>
+                <CardMedia
+                  className={classes.cardMedia}
+                  image={product.imageURL}
+                  title={product.title + ' cover'}
+                />
+                <CardContent className={classes.cardContent}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {product.title}
+                  </Typography>
+                  <Typography>
+                    {product.author ? 'By ' + product.author : null}
+                  </Typography>
+                  <Typography
+                    className={classes.productPrice}
+                    align="right"
+                    variant="h6"
+                    component="h6"
+                  >
+                    {'$' + product.price / 100}
+                  </Typography>
+                </CardContent>
+                <CardActions className={classes.cardActions}>
+                  <Link href={'/products/' + product.id}>
                     <Button size="small" color="primary">
-                      View
+                      View Details
                     </Button>
-                  </CardActions>
-                </Card>
-              </Link>
+                  </Link>
+                  <IconButton
+                    color="primary"
+                    aria-label="add to shopping cart"
+                    onClick={() => addToLocalCart(product.id, product)}
+                  >
+                    <AddShoppingCartIcon />
+                  </IconButton>
+                </CardActions>
+              </Card>
             </Grid>
           ))
         ) : (

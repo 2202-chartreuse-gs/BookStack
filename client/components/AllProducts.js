@@ -63,13 +63,14 @@ const useStyles = makeStyles((theme) => ({
 
 const AllProducts = () => {
   //useState hook gives us a local cart to work with
-  const [localCart, setLocalCart] = useState({})
+  const [localCart, setLocalCart] = useState({ totalItems: 0 })
 
   //useDispatch hook for Redux store
   const dispatch = useDispatch()
 
   //useEffect React hook
   useEffect(() => {
+    getAndSetLocalCart()
     dispatch(fetchProducts())
   }, [])
 
@@ -81,6 +82,8 @@ const AllProducts = () => {
 
   //this performs the basic function of adding to the cart in local storage, for use by users not logged in
   const addToLocalCart = (itemId, qty = 1) => {
+    console.log(localCart.totalItems)
+    localCart.totalItems += qty
     const tempCart = { ...localCart }
     tempCart[itemId] ? (tempCart[itemId] += qty) : (tempCart[itemId] = qty)
     setLocalCart(tempCart)
@@ -91,11 +94,14 @@ const AllProducts = () => {
         'Sorry, your browser does not support this feature. Try creating an account instead'
       )
     }
-    // function getGameData() {
-    //   if (window.localStorage.getItem('gameData')) {
-    //     const data = window.localStorage.getItem('gameData');
-    //   }
-    // }
+  }
+
+  const getAndSetLocalCart = () => {
+    if (window.localStorage && window.localStorage.getItem('bookStackCart')) {
+      let browserCart = window.localStorage.getItem('bookStackCart')
+      browserCart = JSON.parse(browserCart)
+      setLocalCart(browserCart)
+    }
   }
 
   return (

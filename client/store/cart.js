@@ -24,12 +24,12 @@ export const fetchCart = (userId) => async (dispatch) => {
     data.cart[0].products.forEach((product) => {
       let cartQty = product.Order_Products.qty
       if (!userCart.items[product.id]) {
-        //if the product doesn't exist in the cart initilize it
+        //if the product doesn't exist in the cart add a placeholder
         userCart.items[product.id] = product.id
         userCart.items[product.id] = { ...product }
         userCart.items[product.id].qty = 0
       }
-      //update the product quantity
+      //update the quantity
       userCart.items[product.id].qty += cartQty
       //update the total items count
       userCart.totalItems += cartQty

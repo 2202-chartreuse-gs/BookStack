@@ -159,6 +159,15 @@ const seed = async () => {
   await amosCart.addProduct(products[2], { through: { qty: 1, price: 299 } })
   await amosCart.addProduct(products[4], { through: { qty: 13, price: 999 } })
 
+  const completedBobbieOrder = await bobbie.createOrder()
+  await completedBobbieOrder.addProduct(products[1], {
+    through: { qty: 2, price: 599 },
+  })
+  await completedBobbieOrder.addProduct(products[2], {
+    through: { qty: 5, price: 999 },
+  })
+  await completedBobbieOrder.update({ isComplete: true })
+
   db.close()
   console.log(`Seeding success!`)
 }

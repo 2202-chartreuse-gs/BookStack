@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const {
-  models: { User },
+  models: { User, Order, Product },
+  Order_Products,
 } = require('../db')
 const { validateToken } = require('./authMiddleware')
 module.exports = router
@@ -10,8 +11,6 @@ module.exports = router
 router.get('/', validateToken, async (req, res, next) => {
   try {
     const { isAdmin } = await User.findByToken(req.headers.authorization)
-    console.log(req.headers.authorization)
-    console.log(req.headers.authorization)
     if (isAdmin !== true) {
       return res.status(401).json({ error: 'Unauthorized' })
     }
@@ -31,12 +30,79 @@ router.get('/', validateToken, async (req, res, next) => {
   }
 })
 
-// GET /api/users/:id
+// GET /api/users/:id/orders
 // Access: Admin and specific user
-router.get('/:id', async (req, res, next) => {
+router.get('/:id/orders', async (req, res, next) => {
   try {
-    const singleUser = await User.findByPk(req.params.id)
-    singleUser ? res.send(singleUser) : res.sendStatus(404)
+    const singleUser = await User.findOne({
+      where: {
+        id: req.params.id,
+      },
+      attributes: ['id', 'email', 'firstName', 'lastName', 'isAdmin'],
+    })
+    const usersOrder = await Order.findAll({
+      where: {
+        userId: req.params.id,
+        isComplete: true,
+      },
+      attributes: [],
+      include: [
+        {
+          model: Product,
+          attributes: ['id', 'imageURL', 'productURL', 'title', 'author'],
+          through: {
+            attributes: ['qty', 'price'],
+          },
+        },
+      ],
+    })
+    if (singleUser) {
+      res.send({ user: singleUser, orders: usersOrder })
+    } else {
+      res.sendStatus(404)
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+//GET /api/users/:id/cart
+router.get('/:id/cart', async (req, res, next) => {
+  try {
+    const singleUser = await User.findOne({
+      where: {
+        id: req.params.id,
+      },
+      attributes: ['id', 'firstName', 'lastName'],
+    })
+    const usersCart = await Order.findAll({
+      where: {
+        userId: req.params.id,
+        isComplete: false,
+      },
+      attributes: [],
+      include: [
+        {
+          model: Product,
+          attributes: [
+            'id',
+            'imageURL',
+            'productURL',
+            'title',
+            'author',
+            'price',
+          ],
+          through: {
+            attributes: ['qty'],
+          },
+        },
+      ],
+    })
+    if (singleUser) {
+      res.send({ user: singleUser, cart: usersCart })
+    } else {
+      res.sendStatus(404)
+    }
   } catch (error) {
     next(error)
   }

@@ -8,7 +8,7 @@ const Navbar = ({ handleClick, isLoggedIn, isAdmin }) => {
   let cart = useSelector((store) => store.cart)
   return (
     <div>
-      <h1>FS-App-Template</h1>
+      <h1>Bookstack</h1>
       <nav>
         {isLoggedIn ? (
           <div>

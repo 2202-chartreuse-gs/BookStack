@@ -10,6 +10,12 @@ label {
   display: block;
 }
 
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
 nav a {
   display: inline-block;
   margin: 1em;
@@ -30,5 +36,3 @@ form div {
 
 
 } */
-
-

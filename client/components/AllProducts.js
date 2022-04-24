@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchProducts } from '../store/products'
+import { setCart } from '../store/cart'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
-import CameraIcon from '@material-ui/icons/PhotoCamera'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardActions from '@material-ui/core/CardActions'
@@ -62,10 +62,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const AllProducts = () => {
-  //useState hook gives us a local cart to work with
-  const [localCart, setLocalCart] = useState({ totalItems: 0 })
-
-  //useDispatch hook for Redux store
+  //allows dispatch to Redux store
   const dispatch = useDispatch()
 
   //useEffect React hook
@@ -74,24 +71,25 @@ const AllProducts = () => {
     dispatch(fetchProducts())
   }, [])
 
-  //useSelector hook to get products from Redux store
-  let products = useSelector((store) => store.products)
+  //useSelector hook pulls from Redux store
+  let { products, cart } = useSelector((store) => store)
 
   //Material UI styles hook
   const classes = useStyles()
 
   //this performs the basic function of adding to the cart in local storage, for use by users not logged in
-  const addToLocalCart = (itemId, qty = 1) => {
-    console.log(localCart.totalItems)
-    localCart.totalItems += qty
-    const tempCart = { ...localCart }
-    tempCart[itemId] ? (tempCart[itemId] += qty) : (tempCart[itemId] = qty)
-    setLocalCart(tempCart)
+  const addToLocalCart = (productId, product, qty = 1) => {
+    const tempCart = { ...cart }
+    tempCart[productId]
+      ? (tempCart[productId].qty += qty)
+      : (tempCart[productId] = { ...product, qty })
+    tempCart.totalItems += qty
+    dispatch(setCart(tempCart))
     if (window.localStorage) {
-      window.localStorage.setItem('bookStackCart', JSON.stringify(localCart))
+      window.localStorage.setItem('bookStackCart', JSON.stringify(tempCart))
     } else {
       alert(
-        'Sorry, your browser does not support this feature. Try creating an account instead'
+        'Sorry, your browser does not support this feature. Try creating an account first.'
       )
     }
   }
@@ -100,7 +98,7 @@ const AllProducts = () => {
     if (window.localStorage && window.localStorage.getItem('bookStackCart')) {
       let browserCart = window.localStorage.getItem('bookStackCart')
       browserCart = JSON.parse(browserCart)
-      setLocalCart(browserCart)
+      dispatch(setCart(browserCart))
     }
   }
 
@@ -120,7 +118,9 @@ const AllProducts = () => {
                   <Typography gutterBottom variant="h5" component="h2">
                     {product.title}
                   </Typography>
-                  <Typography>By {product.author}</Typography>
+                  <Typography>
+                    {product.author ? 'By ' + product.author : null}
+                  </Typography>
                   <Typography
                     className={classes.productPrice}
                     align="right"
@@ -139,7 +139,7 @@ const AllProducts = () => {
                   <IconButton
                     color="primary"
                     aria-label="add to shopping cart"
-                    onClick={() => addToLocalCart(product.id)}
+                    onClick={() => addToLocalCart(product.id, product)}
                   >
                     <AddShoppingCartIcon />
                   </IconButton>

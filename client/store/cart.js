@@ -13,10 +13,29 @@ export const setCart = (cart) => ({ type: SET_CART, cart })
  * THUNK CREATORS
  */
 
-export const fetchCart = () => async (dispatch) => {
+export const fetchCart = (userId) => async (dispatch) => {
   try {
-    const { data } = await axios.get('/api/cart/')
-    return dispatch(setCart(data))
+    const { data } = await axios.get(`/api/users/${userId}/cart`)
+    let userCart = {
+      userId: data.user.id,
+      items: {},
+      totalItems: 0,
+    }
+    data.cart[0].products.forEach((product) => {
+      let cartQty = product.Order_Products.qty
+      if (!userCart.items[product.id]) {
+        //if the product doesn't exist in the cart initilize it
+        userCart.items[product.id] = product.id
+        userCart.items[product.id] = { ...product }
+        userCart.items[product.id].qty = 0
+      }
+      //update the product quantity
+      userCart.items[product.id].qty += cartQty
+      //update the total items count
+      userCart.totalItems += cartQty
+    })
+    console.log('cart data from thunk get request: ')
+    console.dir(userCart)
   } catch (error) {
     console.log(error)
   }

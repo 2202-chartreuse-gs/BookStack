@@ -31,7 +31,7 @@ router.get('/:id', async (req, res, next) => {
         isComplete: true,
       },
     })
-    res.send(usersCart)
+    res.send(usersPurchases)
   } catch (error) {
     next(error)
   }

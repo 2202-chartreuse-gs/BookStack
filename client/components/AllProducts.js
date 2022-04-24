@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchProducts } from '../store/products'
-import { setCart } from '../store/cart'
+import { setCart, fetchCart } from '../store/cart'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -69,36 +69,62 @@ const AllProducts = () => {
   useEffect(() => {
     getAndSetLocalCart()
     dispatch(fetchProducts())
+    getUserCart()
   }, [])
 
   //useSelector hook pulls from Redux store
-  let { products, cart } = useSelector((store) => store)
+  let { products, cart, auth } = useSelector((store) => store)
 
   //Material UI styles hook
   const classes = useStyles()
 
-  //this performs the basic function of adding to the cart in local storage, for use by users not logged in
-  const addToLocalCart = (productId, product, qty = 1) => {
+  //updates the cart in the redux store
+  const setStoreCart = (productId, product, qty = 1) => {
+    //copies the current cart
     const tempCart = { ...cart }
+    //checks for the item and updates quantity or adds the item to the cart
     tempCart[productId]
       ? (tempCart[productId].qty += qty)
       : (tempCart[productId] = { ...product, qty })
+    //counts the total items added to the cart
     tempCart.totalItems += qty
+    //dispatches and returns the updated cart to the redux store
     dispatch(setCart(tempCart))
+    return tempCart
+  }
+
+  //this performs the basic function of adding to the cart in local storage, esp. useful for by users not logged in.
+  const addToLocalCart = (tempCart) => {
     if (window.localStorage) {
       window.localStorage.setItem('bookStackCart', JSON.stringify(tempCart))
     } else {
-      alert(
-        'Sorry, your browser does not support this feature. Try creating an account first.'
-      )
+      if (!auth) {
+        alert(
+          'Sorry, your browser does not support this feature. Try creating an account first.'
+        )
+      }
     }
   }
-
+  const getUserCart = () => {
+    console.log('fetching cart for user: ' + auth.id)
+    dispatch(fetchCart(1))
+  }
   const getAndSetLocalCart = () => {
     if (window.localStorage && window.localStorage.getItem('bookStackCart')) {
       let browserCart = window.localStorage.getItem('bookStackCart')
       browserCart = JSON.parse(browserCart)
       dispatch(setCart(browserCart))
+    }
+  }
+
+  const handleAddToCart = (productId, product, qty = 1) => {
+    const tempCart = setStoreCart(productId, product, qty)
+    //even if our user is logged in, we'll save a copy of the cart to local storage. Possibly this can be merged with the saved cart when the user logs in
+    addToLocalCart(tempCart)
+    if (auth) {
+      console.log('This needs to be sent to the database - tempCart: ')
+      console.log(tempCart)
+      // dispatch database update
     }
   }
 
@@ -139,7 +165,7 @@ const AllProducts = () => {
                   <IconButton
                     color="primary"
                     aria-label="add to shopping cart"
-                    onClick={() => addToLocalCart(product.id, product)}
+                    onClick={() => handleAddToCart(product.id, product)}
                   >
                     <AddShoppingCartIcon />
                   </IconButton>

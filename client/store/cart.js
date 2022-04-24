@@ -34,7 +34,9 @@ export const fetchCart = (userId) => async (dispatch) => {
       //update the total items count
       userCart.totalItems += cartQty
     })
-    console.log('cart data from thunk get request: ')
+    console.log(
+      'cart data from thunk get request for userId ' + userCart.userId
+    )
     console.dir(userCart)
   } catch (error) {
     console.log(error)
@@ -44,7 +46,11 @@ export const fetchCart = (userId) => async (dispatch) => {
 /**
  * REDUCER
  */
-export default function cartReducer(state = { totalItems: 0 }, action) {
+
+export default function cartReducer(
+  state = { userId: 0, items: {}, totalItems: 0, userId: 0 },
+  action
+) {
   switch (action.type) {
     case SET_CART:
       return { ...action.cart }

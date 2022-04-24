@@ -79,18 +79,20 @@ const AllProducts = () => {
   const classes = useStyles()
 
   //updates the cart in the redux store
-  const setStoreCart = (productId, product, qty = 1) => {
+  const setStoreCart = (productId, product, qty = 1, userId = 0) => {
     //copies the current cart
     const tempCart = { ...cart }
     //checks for the item and updates quantity or adds the item to the cart
-    tempCart[productId]
-      ? (tempCart[productId].qty += qty)
-      : (tempCart[productId] = { ...product, qty })
-    //counts the total items added to the cart
-    tempCart.totalItems += qty
-    //dispatches and returns the updated cart to the redux store
-    dispatch(setCart(tempCart))
-    return tempCart
+    if (tempCart.userId === userId) {
+      tempCart.items[productId]
+        ? (tempCart.items[productId].qty += qty)
+        : (tempCart.items[productId] = { ...product, qty })
+      //counts the total items added to the cart
+      tempCart.totalItems += qty
+      //dispatches and returns the updated cart to the redux store
+      dispatch(setCart(tempCart))
+      return tempCart
+    }
   }
 
   //this performs the basic function of adding to the cart in local storage, esp. useful for by users not logged in.

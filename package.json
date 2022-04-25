@@ -32,6 +32,7 @@
     "lorem-hipsum": "^0.1.7",
     "morgan": "^1.9.1",
     "pg": "^8.5.1",
+    "recharts": "^2.1.9",
     "sass": "^1.50.1",
     "sequelize": "^6.3.5"
   },

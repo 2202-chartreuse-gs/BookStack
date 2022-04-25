@@ -8,6 +8,7 @@ import { me } from './store'
 import SingleProduct from './components/SingleProduct'
 import SignupForm from './components/SignupForm'
 import LoginForm from './components/LoginForm'
+import AdminDashboard from './components/AdminDashboard'
 /**
  * COMPONENT
  */
@@ -17,7 +18,7 @@ class Routes extends Component {
   }
 
   render() {
-    const { isLoggedIn } = this.props
+    const { isLoggedIn, isAdmin } = this.props
 
     return (
       <div>
@@ -28,12 +29,8 @@ class Routes extends Component {
             <Route path="/logout" component={Home} />
             <Route path="/users" component={AllUsers} />
             <Route exact path="/products" component={AllProducts} />
-            <Route path="/users" component={AllUsers} />
-            <Route
-              exact
-              path="/products/:productId"
-              component={SingleProduct}
-            />
+            <Route exact path="/products/:productId" component={SingleProduct} />
+            <Route path="/admin" component={AdminDashboard} />
           </Switch>
         ) : (
           <Switch>

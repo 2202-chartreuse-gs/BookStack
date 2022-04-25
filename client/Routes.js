@@ -22,15 +22,19 @@ class Routes extends Component {
 
     return (
       <div>
+
         {isLoggedIn ? (
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/home" component={Home} />
             <Route path="/logout" component={Home} />
-            <Route path="/users" component={AllUsers} />
+
             <Route exact path="/products" component={AllProducts} />
             <Route exact path="/products/:productId" component={SingleProduct} />
-            <Route path="/admin" component={AdminDashboard} />
+            (isAdmin ? (
+              <Route path="/users" component={AllUsers} />,
+              <Route path="/admin" component={AdminDashboard} />
+            ) : null)
           </Switch>
         ) : (
           <Switch>

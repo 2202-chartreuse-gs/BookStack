@@ -18,7 +18,13 @@ const Navbar = ({ handleClick, isLoggedIn, isAdmin }) => {
               Logout
             </a>
             <Link to="/products/">Products</Link>
-            {isAdmin ? <Link to="/users/">Users</Link> : null}
+            {isAdmin ? (
+              <>
+              <Link to="/users/">Users</Link>
+              <Link to="/admin/">AdminDashboard</Link>
+              </>
+              ) : null
+            }
           </div>
         ) : (
           <div>

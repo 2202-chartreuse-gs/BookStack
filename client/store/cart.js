@@ -3,19 +3,21 @@ import axios from 'axios'
  * ACTION TYPES
  */
 const SET_CART = 'SET_CART'
-
 const TOKEN = 'token'
-
 
 /**
  * ACTION CREATORS
  */
 export const setCart = (cart) => ({ type: SET_CART, cart })
 
-
 /**
  * THUNK CREATORS
  */
+
+export const clearCart = () => (dispatch) => {
+  const emptyCart = { userId: 0, items: {}, totalItems: 0 }
+  dispatch(setCart(emptyCart))
+}
 
 export const fetchCart = (userId) => async (dispatch) => {
   try {
@@ -47,7 +49,7 @@ export const fetchCart = (userId) => async (dispatch) => {
 
 //saves cart to DB // NOTE totalQty must be the new total count of that item, NOT an incrementer
 export const updateDBCart =
-  (userId, productId, totalQty, price) => async (dispatch) => {
+  (userId, productId, totalQty, price) => async () => {
     const token = window.localStorage.getItem(TOKEN)
     try {
       const putRoute = '/api/order/' + userId + '/cart'
@@ -65,13 +67,12 @@ export const updateDBCart =
     }
   }
 
-
 /**
  * REDUCER
  */
 
 export default function cartReducer(
-  state = { userId: 0, items: {}, totalItems: 0, userId: 0 },
+  state = { userId: 0, items: {}, totalItems: 0 },
   action
 ) {
   switch (action.type) {

@@ -16,7 +16,6 @@ const LoginForm = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  // this is where we set react router to redirect to the home page
 
   useEffect(() => {
     userRef.current.focus();

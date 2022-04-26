@@ -103,6 +103,12 @@ const AllProducts = () => {
   }
 
   return (
+    <>
+    <Link to='/add'>
+      <button type='button' />
+    </Link>
+
+
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
         {products ? (
@@ -152,7 +158,9 @@ const AllProducts = () => {
         )}
       </Grid>
     </Container>
+    </>
   )
+
 }
 
 export default AllProducts

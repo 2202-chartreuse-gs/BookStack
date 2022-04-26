@@ -5,3 +5,4 @@ public/bundle.js.map
 
 # OSX
 .DS_Store
+package-lock.json

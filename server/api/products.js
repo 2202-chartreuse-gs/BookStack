@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const {
-  models: { Product },
+  models: { Product, User },
 } = require('../db')
+const { validateToken } = require('./authMiddleware')
 module.exports = router
 
 // GET /api/products/
@@ -30,8 +31,13 @@ router.get('/:id', async (req, res, next) => {
 
 //POST /api/products
 // Access: Admins only
-router.post('/', async (req, res, next) => {
+router.post('/', validateToken, async (req, res, next) => {
   try {
+    console.log("testing to visit, see you soon hopefully ")
+    const { isAdmin } = await User.findByToken(req.headers.authorization)
+    if (isAdmin !== true) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
     res.status(201).send(await Product.create(req.body))
   } catch (error) {
     next(error)
@@ -40,8 +46,12 @@ router.post('/', async (req, res, next) => {
 
 // PUT /api/products/:id
 // Access: Admins only
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', validateToken, async (req, res, next) => {
   try {
+    const { isAdmin } = await User.findByToken(req.headers.authorization)
+    if (isAdmin !== true) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
     const product = await Product.findByPk(req.params.id)
     await product.update(req.body)
     res.send(product)
@@ -52,8 +62,12 @@ router.put('/:id', async (req, res, next) => {
 
 // DELETE /api/products/:id
 // Access: Admins only
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', validateToken, async (req, res, next) => {
   try {
+    const { isAdmin } = await User.findByToken(req.headers.authorization)
+    if (isAdmin !== true) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
     const product = await Product.findByPk(req.params.id)
     await product.destroy()
     res.send(product)

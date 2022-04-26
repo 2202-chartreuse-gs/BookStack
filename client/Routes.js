@@ -8,6 +8,7 @@ import { me } from './store'
 import SingleProduct from './components/SingleProduct'
 import SignupForm from './components/SignupForm'
 import LoginForm from './components/LoginForm'
+import AddProduct from './components/AddProduct'
 /**
  * COMPONENT
  */
@@ -27,13 +28,14 @@ class Routes extends Component {
             <Route path="/home" component={Home} />
             <Route path="/logout" component={Home} />
             <Route path="/users" component={AllUsers} />
+            <Route exact path="/add" component={AddProduct} />
             <Route exact path="/products" component={AllProducts} />
-            <Route path="/users" component={AllUsers} />
             <Route
               exact
               path="/products/:productId"
               component={SingleProduct}
             />
+
           </Switch>
         ) : (
           <Switch>

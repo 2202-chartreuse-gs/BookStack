@@ -31,6 +31,7 @@ export const me = () => async dispatch => {
 export const authenticate = (firstName, lastName, email, password, method) => async dispatch => {
   try {
     const res = await axios.post(`/auth/${method}`, { firstName, lastName, email, password })
+    console.log(res.data.token, "token")
     window.localStorage.setItem(TOKEN, res.data.token)
     history.push('/home')
     dispatch(me())

@@ -127,12 +127,6 @@ const AllProducts = () => {
     const tempCart = await updateStoreCart(productId, product, qty)
     //even if our user is logged in, we'll save a copy of the cart to local storage.
     updateLocalCart(tempCart)
-    if (auth) {
-      console.log(
-        'This needs to be sent to the database - tempCart at updateLocalCart: '
-      )
-      console.dir(tempCart)
-    }
   }
 
   return (

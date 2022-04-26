@@ -110,19 +110,31 @@ const seed = async () => {
   const bobbieCart = await bobbie.createOrder()
   const amosCart = await amos.createOrder()
 
-  await bobbieCart.addProduct(products[0], { through: { qty: 3, price: 799 } })
-  await bobbieCart.addProduct(products[2], { through: { qty: 1, price: 299 } })
-  await bobbieCart.addProduct(products[4], { through: { qty: 13, price: 999 } })
-  await amosCart.addProduct(products[0], { through: { qty: 3, price: 799 } })
-  await amosCart.addProduct(products[2], { through: { qty: 1, price: 299 } })
-  await amosCart.addProduct(products[4], { through: { qty: 13, price: 999 } })
+  await bobbieCart.addProduct(products[0], {
+    through: { qty: 3, price: 799, userId: bobbie.id },
+  })
+  await bobbieCart.addProduct(products[2], {
+    through: { qty: 1, price: 299, userId: bobbie.id },
+  })
+  await bobbieCart.addProduct(products[4], {
+    through: { qty: 13, price: 999, userId: bobbie.id },
+  })
+  await amosCart.addProduct(products[0], {
+    through: { qty: 3, price: 799, userId: amos.id },
+  })
+  await amosCart.addProduct(products[2], {
+    through: { qty: 1, price: 299, userId: amos.id },
+  })
+  await amosCart.addProduct(products[4], {
+    through: { qty: 13, price: 999, userId: amos.id },
+  })
 
   const completedBobbieOrder = await bobbie.createOrder()
   await completedBobbieOrder.addProduct(products[1], {
-    through: { qty: 2, price: 599 },
+    through: { qty: 2, price: 599, userId: bobbie.id },
   })
   await completedBobbieOrder.addProduct(products[2], {
-    through: { qty: 5, price: 999 },
+    through: { qty: 5, price: 999, userId: bobbie.id },
   })
   await completedBobbieOrder.update({ isComplete: true })
 

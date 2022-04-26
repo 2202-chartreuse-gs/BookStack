@@ -1,4 +1,5 @@
 import axios from 'axios'
+import history from '../history'
 const TOKEN = 'token'
 
 /**
@@ -46,6 +47,7 @@ export const addProducts = (product, history) => async (dispatch) => {
         authorization: token,
       }
     })
+    history.push('/products')
     dispatch(_addProducts(data))
   } catch (error) {
     console.log(error)
@@ -76,7 +78,7 @@ export default function productsReducer(state = [], action) {
     case SET_PRODUCTS:
       return [...action.products]
     case ADD_PRODUCT:
-      return [...state, action.products]
+      return [...state,[state.products, action.product]]
     default:
       return state
   }

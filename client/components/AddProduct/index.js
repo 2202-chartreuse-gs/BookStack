@@ -25,7 +25,15 @@ const AddProduct = props => {
     userRef.current.focus();
   },[])
 
-  // console.log(addProducts, "add product first thunk" )
+  // const clearState = () => {
+  //   setImageURL('')
+  //   setProductURL('')
+  //   setTitle('')
+  //   setAuthor('')
+  //   setPrice(0)
+  //   setDescription('')
+  // }
+
   return (
     <>
     <form className='add_product' onSubmit={handleSubmit} >
@@ -72,7 +80,11 @@ const AddProduct = props => {
   )
 }
 
-
+const mapState = (state) => {
+  return {
+    products: state.products
+  }
+}
 const mapDispatch = (dispatch, { history }) => {
   return {
     handleSubmit(evt) {
@@ -85,9 +97,10 @@ const mapDispatch = (dispatch, { history }) => {
       const description = evt.target.description.value
 
       dispatch(addProducts({imageURL, productURL, title, author, price, description }, history))
+
     }
   }
 }
 
 
-export default connect(null, mapDispatch)(AddProduct)
+export default connect(mapState, mapDispatch)(AddProduct)

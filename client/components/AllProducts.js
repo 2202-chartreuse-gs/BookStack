@@ -79,13 +79,9 @@ const AllProducts = () => {
   const classes = useStyles()
 
   //updates the cart in the redux store
-  const updateStoreCart = (productId, product, qty = 1) => {
+  const updateStoreCart = async (productId, product, qty = 1) => {
     //gets the current cart from the store
     const tempCart = { ...cart }
-    //if user is logged in, send the data to the database through the store
-    if (tempCart.userId === auth.id) {
-      dispatch(updateDBCart(auth.id, productId, updatedQty, productId))
-    }
     //now update the store and local storage
     //copies the current cart
     //checks for the item and updates quantity or adds the item to the cart
@@ -96,8 +92,12 @@ const AllProducts = () => {
     tempCart.totalItems += qty
     //dispatches and returns the updated cart to the redux store
     dispatch(setCart(tempCart))
-    const updatedQty = tempCart.items[productId].qty
-
+    //if user is logged in, send the data to the database through the store
+    if (tempCart.userId === auth.id) {
+      //this is the total count of the product after the addition, necessary to update the database.
+      const updatedQty = tempCart.items[productId].qty
+      await dispatch(updateDBCart(auth.id, productId, updatedQty, productId))
+    }
     return tempCart
   }
 

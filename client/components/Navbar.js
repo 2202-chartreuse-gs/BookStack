@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { logout } from '../store'
+import { logout, clearCart } from '../store'
 import { useSelector } from 'react-redux'
 
 const Navbar = ({ handleClick, isLoggedIn, isAdmin }) => {

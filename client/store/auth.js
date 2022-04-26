@@ -3,8 +3,6 @@ import history from '../history'
 import { clearCart } from '../store/cart'
 
 const TOKEN = 'token'
-const BOOKSTACKCART = 'bookStackCart'
-
 /**
  * ACTION TYPES
  */
@@ -50,8 +48,6 @@ export const authenticate =
 
 export const logout = () => {
   window.localStorage.removeItem(TOKEN)
-  window.localStorage.removeItem(BOOKSTACKCART)
-  clearCart()
   history.push('/home')
   return {
     type: SET_AUTH,

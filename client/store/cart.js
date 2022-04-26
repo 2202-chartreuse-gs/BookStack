@@ -3,12 +3,15 @@ import axios from 'axios'
  * ACTION TYPES
  */
 const SET_CART = 'SET_CART'
+
 const TOKEN = 'token'
+
 
 /**
  * ACTION CREATORS
  */
 export const setCart = (cart) => ({ type: SET_CART, cart })
+
 
 /**
  * THUNK CREATORS
@@ -57,11 +60,11 @@ export const updateDBCart =
           },
         }
       )
-      console.log(res)
     } catch (error) {
       console.log(error)
     }
   }
+
 
 /**
  * REDUCER

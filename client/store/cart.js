@@ -43,13 +43,13 @@ export const fetchCart = (userId) => async (dispatch) => {
 }
 
 //saves cart to DB
-export const updateDBCart = (userId, product, qty) => async (dispatch) => {
+export const updateDBCart = (userId, product, newQty) => async (dispatch) => {
   const token = window.localStorage.getItem(TOKEN)
   try {
-    const putRoute = '/api/orders/' + userId + '/cart'
+    const putRoute = '/api/order/' + userId + '/cart'
     const res = await axios.put(
       putRoute,
-      { product, qty },
+      { product, newQty, userId },
       {
         headers: {
           authorization: token,

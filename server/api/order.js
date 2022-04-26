@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const {
-  models: { Order },
+  db,
+  models: { User, Product, Order },
 } = require('../db')
 module.exports = router
 
@@ -47,20 +48,32 @@ router.get('/:id', async (req, res, next) => {
 //   }
 // })
 
-// PUT /api/cart/:id
+// PUT /api/order/:id/cart
 // Access: User only
 router.put('/:id/cart', async (req, res, next) => {
-  const user = await User.findByToken(req.headers.authorization)
-  const { userId, product, qty } = req.body
-  if (user.isAdmin || user.id === userId) {
+  console.log(req.body)
+  const { id, isAdmin } = await User.findByToken(req.headers.authorization)
+  //NOTE: qty must be the total quantity from the cart, not the quatity to incriment
+  let { userId, product, newQty } = req.body
+  console.log(userId, product, newQty)
+  // console.log('id and isAdmin : ' + id, isAdmin, +'userId: ' + userId)
+  if ((id && isAdmin) || (id && id === userId)) {
     try {
-      const usersCart = await Order.findAll({
+      const usersCart = await Order.findOrCreate({
         where: {
           userId: req.params.id,
           isComplete: false,
         },
+        include: {
+          model: Product,
+          attributes: ['id', 'imageURL', 'productURL', 'title', 'author'],
+        },
       })
-      usersCart.addProduct(product, { through: { qty } })
+      await usersCart[0].addProduct(product.id, {
+        through: { qty: newQty, price: product.price },
+      })
+      console.log('usersCart.products: ')
+      console.log(usersCart[0].products)
       res.send(usersCart)
     } catch (error) {
       next(error)

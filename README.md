@@ -15,7 +15,7 @@
 - [ ] "checkout" the items in my cart so I can purchase my desired goods.
   - [ ] Think of a typical user experience on popular websites from a guest user and logged-in user perspective._
   - [ ] You can just start with by simulating the experience of checking out with a simple confirmation page._
-- [ ] create an account so I can have a logged-in experience.
+- [x] create an account so I can have a logged-in experience.
 
 ### As a logged-in customer, I want to be able to:
 
@@ -28,9 +28,9 @@
 - [x] have validated data to ensure reliability.
   - [x] i.e. each customer that creates an account should only be able to do so once with a single email address._
 - [ ] have full rights to make backend requests to add, edit, and remove products.
-  - [ ] No one else should have access._
+  - [ ] No one else should have access.
 - [x] view user information.
-  - [x] No one else should have access._
+  - [x] No one else should have access.
 
 ### As an engineer, I want to:
 

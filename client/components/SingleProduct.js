@@ -1,52 +1,40 @@
-import React from 'react'
-import { connect } from 'react-redux'
-
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { fetchSingleProduct } from '../store/singleProduct'
+import { useParams } from 'react-router-dom'
 
-class SingleProduct extends React.Component {
-  componentDidMount() {
-    try {
-      const productId = this.props.match.params.productId
-      this.props.loadSingleProduct(productId)
-    } catch (err) {
-      console.log(err)
-    }
-  }
+const SingleProduct = () => {
+  //allows dispatch to Redux store
+  const dispatch = useDispatch()
+  //pulls up the productId from URL
+  const { productId } = useParams()
+  //useEffect React hook
+  useEffect(() => {
+    // getAndSetLocalCart()
+    dispatch(fetchSingleProduct(productId))
+  }, [])
 
-  render() {
-    const product = this.props.product
-    return (
-      <div id="single-product" className="column">
-        <div id="single-product-details" className="row">
-          <div className="column mr1">
-            {product ? (
-              <div>
-                <h1>{product.title}</h1>
-                <h2>{product.author}</h2>
-                <p>{product.descrption}</p>
-                <p>{product.price}</p>
-                <img src={product.imageURL} />
-              </div>
-            ) : (
-              'Not Found'
-            )}
-          </div>
+  let { singleProduct } = useSelector((store) => store)
+
+  return (
+    <div id="single-product" className="column">
+      <div id="single-product-details" className="row">
+        <div className="column mr1">
+          {singleProduct ? (
+            <div>
+              <h1>{singleProduct.title}</h1>
+              <h2>{singleProduct.author}</h2>
+              <p>{singleProduct.descrption}</p>
+              <p>{'$' + singleProduct.price / 100}</p>
+              <img src={singleProduct.imageURL} />
+            </div>
+          ) : (
+            'Not Found'
+          )}
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    product: state.singleProduct,
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadSingleProduct: (id) => dispatch(fetchSingleProduct(id)),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SingleProduct)
+export default SingleProduct

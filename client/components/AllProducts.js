@@ -132,63 +132,61 @@ const AllProducts = () => {
 
   return (
     <>
-    <Link to='/add'>
-      <button type='button' />
-    </Link>
+      <Link to="/add">
+        <button type="button" />
+      </Link>
 
-
-    <Container className={classes.cardGrid} maxWidth="md">
-      <Grid container spacing={4}>
-        {products ? (
-          products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4}>
-              <Card className={classes.card}>
-                <CardMedia
-                  className={classes.cardMedia}
-                  image={product.imageURL}
-                  title={product.title + ' cover'}
-                />
-                <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {product.title}
-                  </Typography>
-                  <Typography>
-                    {product.author ? 'By ' + product.author : null}
-                  </Typography>
-                  <Typography
-                    className={classes.productPrice}
-                    align="right"
-                    variant="h6"
-                    component="h6"
-                  >
-                    {'$' + product.price / 100}
-                  </Typography>
-                </CardContent>
-                <CardActions className={classes.cardActions}>
-                  <Link href={'/products/' + product.id}>
-                    <Button size="small" color="primary">
-                      View Details
-                    </Button>
-                  </Link>
-                  <IconButton
-                    color="primary"
-                    aria-label="add to shopping cart"
-                    onClick={() => handleAddToCart(product.id, product)}
-                  >
-                    <AddShoppingCartIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))
-        ) : (
-          <h5>No Products Found</h5>
-        )}
-      </Grid>
-    </Container>
+      <Container className={classes.cardGrid} maxWidth="md">
+        <Grid container spacing={4}>
+          {products ? (
+            products.map((product) => (
+              <Grid item key={product.id} xs={12} sm={6} md={4}>
+                <Card className={classes.card}>
+                  <CardMedia
+                    className={classes.cardMedia}
+                    image={product.imageURL}
+                    title={product.title + ' cover'}
+                  />
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {product.title}
+                    </Typography>
+                    <Typography>
+                      {product.author ? 'By ' + product.author : null}
+                    </Typography>
+                    <Typography
+                      className={classes.productPrice}
+                      align="right"
+                      variant="h6"
+                      component="h6"
+                    >
+                      {'$' + product.price / 100}
+                    </Typography>
+                  </CardContent>
+                  <CardActions className={classes.cardActions}>
+                    <Link href={'/products/' + product.id}>
+                      <Button size="small" color="primary">
+                        View Details
+                      </Button>
+                    </Link>
+                    <IconButton
+                      color="primary"
+                      aria-label="add to shopping cart"
+                      onClick={() => handleAddToCart(product.id, product)}
+                    >
+                      <AddShoppingCartIcon />
+                    </IconButton>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <h5>No Products Found</h5>
+          )}
+        </Grid>
+      </Container>
     </>
   )
-
 }
 
 export default AllProducts

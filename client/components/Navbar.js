@@ -7,8 +7,10 @@ import { useSelector } from 'react-redux'
 const Navbar = ({ handleClick, isLoggedIn, isAdmin }) => {
   let cart = useSelector((store) => store.cart)
   return (
-    <div>
-      <h1>Bookstack</h1>
+    <header>
+      <h1>
+        <img src="../bookstack-logo.png" alt="bookstack logo" />
+      </h1>
       <nav>
         {isLoggedIn ? (
           <div>
@@ -35,7 +37,7 @@ const Navbar = ({ handleClick, isLoggedIn, isAdmin }) => {
         </div>
       </nav>
       <hr />
-    </div>
+    </header>
   )
 }
 

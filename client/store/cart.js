@@ -4,6 +4,7 @@ import axios from 'axios'
  */
 const SET_CART = 'SET_CART'
 const TOKEN = 'token'
+const BOOKSTACKCART = 'bookStackCart'
 
 /**
  * ACTION CREATORS
@@ -14,9 +15,12 @@ export const setCart = (cart) => ({ type: SET_CART, cart })
  * THUNK CREATORS
  */
 
-export const clearCart = () => (dispatch) => {
-  const emptyCart = { userId: 0, items: {}, totalItems: 0 }
-  dispatch(setCart(emptyCart))
+export const clearCart = () => {
+  window.localStorage.removeItem(BOOKSTACKCART)
+  return {
+    type: SET_CART,
+    cart: { userId: 0, items: {}, totalItems: 0 },
+  }
 }
 
 export const fetchCart = (userId) => async (dispatch) => {

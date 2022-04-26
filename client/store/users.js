@@ -15,7 +15,6 @@ const setAllUsers = (users) => ({ type: SET_ALL_USERS, users })
 /**
  * THUNK CREATORS
  */
-
 export const fetchAllUsers = () => async (dispatch) => {
   try {
     const token = window.localStorage.getItem(TOKEN)

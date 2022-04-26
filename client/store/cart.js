@@ -3,6 +3,7 @@ import axios from 'axios'
  * ACTION TYPES
  */
 const SET_CART = 'SET_CART'
+const TOKEN = 'token'
 
 /**
  * ACTION CREATORS
@@ -34,10 +35,33 @@ export const fetchCart = (userId) => async (dispatch) => {
       //update the total items count
       userCart.totalItems += cartQty
     })
-    console.log(
-      'cart data from thunk get request for userId ' + userCart.userId
+    dispatch(setCart(userCart))
+    return userCart
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+//saves cart to DB
+export const updateDBCart = (userId, product, qty) => async () => {
+  const token = window.localStorage.getItem(TOKEN)
+  try {
+    const res = await axios.put(
+      '/api/orders/1/cart',
+      { product, qty },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
     )
-    console.dir(userCart)
+    console.log(
+      'response from thunk put request for userId ' +
+        userId +
+        ' and product: ' +
+        product.name
+    )
+    console.log(res)
   } catch (error) {
     console.log(error)
   }

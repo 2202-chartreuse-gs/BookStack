@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchProducts } from '../store/products'
-import { setCart, fetchCart } from '../store/cart'
+import { setCart, fetchCart, updateDBCart } from '../store/cart'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -62,28 +62,29 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const AllProducts = () => {
-  //allows dispatch to Redux store
-  const dispatch = useDispatch()
-
-  //useEffect React hook
-  useEffect(() => {
-    getAndSetLocalCart()
-    dispatch(fetchProducts())
-    getUserCart()
-  }, [])
-
   //useSelector hook pulls from Redux store
   let { products, cart, auth } = useSelector((store) => store)
+  //allows dispatch to Redux store
+  const dispatch = useDispatch()
+  //useEffect React hook
+  useEffect(() => {
+    dispatch(fetchProducts())
+  }, [])
+
+  useEffect(() => {
+    auth.id ? getUserCart(auth.id) : getAndSetLocalCart()
+  }, [auth])
 
   //Material UI styles hook
   const classes = useStyles()
 
   //updates the cart in the redux store
-  const setStoreCart = (productId, product, qty = 1, userId = 0) => {
+  const updateStoreCart = (productId, product, qty = 1) => {
     //copies the current cart
     const tempCart = { ...cart }
     //checks for the item and updates quantity or adds the item to the cart
-    if (tempCart.userId === userId) {
+
+    if (tempCart.userId === auth.id) {
       tempCart.items[productId]
         ? (tempCart.items[productId].qty += qty)
         : (tempCart.items[productId] = { ...product, qty })
@@ -91,14 +92,15 @@ const AllProducts = () => {
       tempCart.totalItems += qty
       //dispatches and returns the updated cart to the redux store
       dispatch(setCart(tempCart))
+      dispatch(updateDBCart(auth.id, product, qty))
       return tempCart
     }
   }
 
   //this performs the basic function of adding to the cart in local storage, esp. useful for by users not logged in.
-  const addToLocalCart = (tempCart) => {
+  const updateLocalCart = (cart) => {
     if (window.localStorage) {
-      window.localStorage.setItem('bookStackCart', JSON.stringify(tempCart))
+      window.localStorage.setItem('bookStackCart', JSON.stringify(cart))
     } else {
       if (!auth) {
         alert(
@@ -107,10 +109,12 @@ const AllProducts = () => {
       }
     }
   }
-  const getUserCart = () => {
-    console.log('fetching cart for user: ' + auth.id)
-    dispatch(fetchCart(1))
+
+  const getUserCart = async (id) => {
+    const userCart = await dispatch(fetchCart(id))
+    updateLocalCart(userCart)
   }
+
   const getAndSetLocalCart = () => {
     if (window.localStorage && window.localStorage.getItem('bookStackCart')) {
       let browserCart = window.localStorage.getItem('bookStackCart')
@@ -119,14 +123,15 @@ const AllProducts = () => {
     }
   }
 
-  const handleAddToCart = (productId, product, qty = 1) => {
-    const tempCart = setStoreCart(productId, product, qty)
-    //even if our user is logged in, we'll save a copy of the cart to local storage. Possibly this can be merged with the saved cart when the user logs in
-    addToLocalCart(tempCart)
+  const handleAddToCart = async (productId, product, qty = 1) => {
+    const tempCart = await updateStoreCart(productId, product, qty)
+    //even if our user is logged in, we'll save a copy of the cart to local storage.
+    updateLocalCart(tempCart)
     if (auth) {
-      console.log('This needs to be sent to the database - tempCart: ')
-      console.log(tempCart)
-      // dispatch database update
+      console.log(
+        'This needs to be sent to the database - tempCart at updateLocalCart: '
+      )
+      console.dir(tempCart)
     }
   }
 

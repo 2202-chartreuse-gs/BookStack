@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import CameraIcon from '@material-ui/icons/PhotoCamera'
@@ -50,9 +50,14 @@ const useStyles = makeStyles((theme) => ({
 /**
  * COMPONENT
  */
-export const Home = (props) => {
+export const Home = () => {
+  //Redux store hook
+  let auth = useSelector((store) => store.auth)
+  const { firstName } = auth
+
+  // Material UI Styles hook
   const classes = useStyles()
-  const { firstName } = props
+
   return (
     <div>
       {/* Hero unit */}
@@ -100,13 +105,4 @@ export const Home = (props) => {
   )
 }
 
-/**
- * CONTAINER
- */
-const mapState = (state) => {
-  return {
-    firstName: state.auth.firstName,
-  }
-}
-
-export default connect(mapState)(Home)
+export default Home

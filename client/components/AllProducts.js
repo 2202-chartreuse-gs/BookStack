@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchProducts } from '../store/products'
-import { setCart } from '../store/cart'
+import { setCart, fetchCart, updateDBCart } from '../store/cart'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -62,36 +62,58 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const AllProducts = () => {
+  //useSelector hook pulls from Redux store
+  let { products, cart, auth } = useSelector((store) => store)
   //allows dispatch to Redux store
   const dispatch = useDispatch()
-
   //useEffect React hook
   useEffect(() => {
-    getAndSetLocalCart()
     dispatch(fetchProducts())
   }, [])
 
-  //useSelector hook pulls from Redux store
-  let { products, cart } = useSelector((store) => store)
+  useEffect(() => {
+    auth.id ? getUserCart(auth.id) : getAndSetLocalCart()
+  }, [auth])
 
   //Material UI styles hook
   const classes = useStyles()
 
-  //this performs the basic function of adding to the cart in local storage, for use by users not logged in
-  const addToLocalCart = (productId, product, qty = 1) => {
+  //updates the cart in the redux store
+  const updateStoreCart = (productId, product, qty = 1) => {
+    //copies the current cart
     const tempCart = { ...cart }
-    tempCart[productId]
-      ? (tempCart[productId].qty += qty)
-      : (tempCart[productId] = { ...product, qty })
-    tempCart.totalItems += qty
-    dispatch(setCart(tempCart))
-    if (window.localStorage) {
-      window.localStorage.setItem('bookStackCart', JSON.stringify(tempCart))
-    } else {
-      alert(
-        'Sorry, your browser does not support this feature. Try creating an account first.'
-      )
+    //checks for the item and updates quantity or adds the item to the cart
+
+    if (tempCart.userId === auth.id) {
+      tempCart.items[productId]
+        ? (tempCart.items[productId].qty += qty)
+        : (tempCart.items[productId] = { ...product, qty })
+      //counts the total items added to the cart
+      tempCart.totalItems += qty
+      //dispatches and returns the updated cart to the redux store
+      dispatch(setCart(tempCart))
+      const updatedQty = tempCart.items[productId].qty
+      dispatch(updateDBCart(auth.id, productId, updatedQty, productId))
+      return tempCart
     }
+  }
+
+  //this performs the basic function of adding to the cart in local storage, esp. useful for by users not logged in.
+  const updateLocalCart = (cart) => {
+    if (window.localStorage) {
+      window.localStorage.setItem('bookStackCart', JSON.stringify(cart))
+    } else {
+      if (!auth) {
+        alert(
+          'Sorry, your browser does not support this feature. Try creating an account first.'
+        )
+      }
+    }
+  }
+
+  const getUserCart = async (id) => {
+    const userCart = await dispatch(fetchCart(id))
+    updateLocalCart(userCart)
   }
 
   const getAndSetLocalCart = () => {
@@ -100,6 +122,12 @@ const AllProducts = () => {
       browserCart = JSON.parse(browserCart)
       dispatch(setCart(browserCart))
     }
+  }
+
+  const handleAddToCart = async (productId, product, qty = 1) => {
+    const tempCart = await updateStoreCart(productId, product, qty)
+    //even if our user is logged in, we'll save a copy of the cart to local storage.
+    updateLocalCart(tempCart)
   }
 
   return (
@@ -145,7 +173,7 @@ const AllProducts = () => {
                   <IconButton
                     color="primary"
                     aria-label="add to shopping cart"
-                    onClick={() => addToLocalCart(product.id, product)}
+                    onClick={() => handleAddToCart(product.id, product)}
                   >
                     <AddShoppingCartIcon />
                   </IconButton>

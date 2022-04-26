@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const {
-  models: { Order },
+  db,
+  models: { User, Product, Order },
 } = require('../db')
 module.exports = router
 
@@ -31,7 +32,7 @@ router.get('/:id', async (req, res, next) => {
         isComplete: true,
       },
     })
-    res.send(usersCart)
+    res.send(usersPurchases)
   } catch (error) {
     next(error)
   }
@@ -47,15 +48,46 @@ router.get('/:id', async (req, res, next) => {
 //   }
 // })
 
-// PUT /api/cart/:id
+// PUT /api/order/:id/cart
 // Access: User only
-router.put('/:id', async (req, res, next) => {
-  try {
-    const cartToEdit = await Cart.findByPk(req.params.id)
-    await cartToEdit.update(req.body)
-    res.send(cartToEdit)
-  } catch (error) {
-    next(error)
+router.put('/:id/cart', async (req, res, next) => {
+  console.log(req.body)
+  const { id, isAdmin } = await User.findByToken(req.headers.authorization)
+  //NOTE: qty must be the total quantity from the cart, not the quatity to incriment
+  let { userId, productId, totalQty, price } = req.body
+  console.log(userId, productId, totalQty, price)
+  // console.log('id and isAdmin : ' + id, isAdmin, +'userId: ' + userId)
+  if ((id && isAdmin) || (id && id === userId)) {
+    try {
+      const usersCart = await Order.findOrCreate({
+        where: {
+          userId: id,
+          isComplete: false,
+          through: { userId: id },
+        },
+        include: {
+          model: Product,
+          attributes: [
+            'id',
+            'imageURL',
+            'productURL',
+            'title',
+            'author',
+            'price',
+          ],
+        },
+      })
+      await usersCart[0].addProduct(productId, {
+        through: { qty: totalQty, price, userId },
+      })
+      console.log('usersCart.products: ')
+      console.log(usersCart[0].products)
+      res.send(usersCart)
+    } catch (error) {
+      next(error)
+    }
+  } else {
+    return res.status(401).json({ error: 'Unauthorized' })
   }
 })
 

@@ -9,6 +9,7 @@ import SingleProduct from './components/SingleProduct'
 import SignupForm from './components/SignupForm'
 import LoginForm from './components/LoginForm'
 import AddProduct from './components/AddProduct'
+import Checkout from './components/Checkout'
 /**
  * COMPONENT
  */
@@ -35,7 +36,7 @@ class Routes extends Component {
               path="/products/:productId"
               component={SingleProduct}
             />
-
+            <Route path="/checkout" component={Checkout} />
           </Switch>
         ) : (
           <Switch>
@@ -50,6 +51,7 @@ class Routes extends Component {
               path="/products/:productId"
               component={SingleProduct}
             />
+            <Route path="/checkout" component={Checkout} />
           </Switch>
         )}
       </div>

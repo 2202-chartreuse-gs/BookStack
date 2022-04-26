@@ -42,31 +42,26 @@ export const fetchCart = (userId) => async (dispatch) => {
   }
 }
 
-//saves cart to DB
-export const updateDBCart = (userId, product, newQty) => async (dispatch) => {
-  const token = window.localStorage.getItem(TOKEN)
-  try {
-    const putRoute = '/api/order/' + userId + '/cart'
-    const res = await axios.put(
-      putRoute,
-      { product, newQty, userId },
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    )
-    console.log(
-      'response from thunk put request for userId ' +
-        userId +
-        ' and product: ' +
-        product.name
-    )
-    console.log(res)
-  } catch (error) {
-    console.log(error)
+//saves cart to DB // NOTE totalQty must be the new total count of that item, NOT an incrementer
+export const updateDBCart =
+  (userId, productId, totalQty, price) => async (dispatch) => {
+    const token = window.localStorage.getItem(TOKEN)
+    try {
+      const putRoute = '/api/order/' + userId + '/cart'
+      const res = await axios.put(
+        putRoute,
+        { userId, productId, totalQty, price },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      )
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
   }
-}
 
 /**
  * REDUCER

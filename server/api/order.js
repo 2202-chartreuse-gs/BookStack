@@ -54,23 +54,31 @@ router.put('/:id/cart', async (req, res, next) => {
   console.log(req.body)
   const { id, isAdmin } = await User.findByToken(req.headers.authorization)
   //NOTE: qty must be the total quantity from the cart, not the quatity to incriment
-  let { userId, product, newQty } = req.body
-  console.log(userId, product, newQty)
+  let { userId, productId, totalQty, price } = req.body
+  console.log(userId, productId, totalQty, price)
   // console.log('id and isAdmin : ' + id, isAdmin, +'userId: ' + userId)
   if ((id && isAdmin) || (id && id === userId)) {
     try {
       const usersCart = await Order.findOrCreate({
         where: {
-          userId: req.params.id,
+          userId: id,
           isComplete: false,
+          through: { userId: id },
         },
         include: {
           model: Product,
-          attributes: ['id', 'imageURL', 'productURL', 'title', 'author'],
+          attributes: [
+            'id',
+            'imageURL',
+            'productURL',
+            'title',
+            'author',
+            'price',
+          ],
         },
       })
-      await usersCart[0].addProduct(product.id, {
-        through: { qty: newQty, price: product.price },
+      await usersCart[0].addProduct(productId, {
+        through: { qty: totalQty, price, userId },
       })
       console.log('usersCart.products: ')
       console.log(usersCart[0].products)

@@ -93,7 +93,7 @@ const AllProducts = () => {
       //dispatches and returns the updated cart to the redux store
       dispatch(setCart(tempCart))
       const updatedQty = tempCart.items[productId].qty
-      dispatch(updateDBCart(auth.id, product.id, updatedQty))
+      dispatch(updateDBCart(auth.id, productId, updatedQty, productId))
       return tempCart
     }
   }

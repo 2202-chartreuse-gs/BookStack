@@ -80,22 +80,25 @@ const AllProducts = () => {
 
   //updates the cart in the redux store
   const updateStoreCart = (productId, product, qty = 1) => {
-    //copies the current cart
+    //gets the current cart from the store
     const tempCart = { ...cart }
-    //checks for the item and updates quantity or adds the item to the cart
-
+    //if user is logged in, send the data to the database through the store
     if (tempCart.userId === auth.id) {
-      tempCart.items[productId]
-        ? (tempCart.items[productId].qty += qty)
-        : (tempCart.items[productId] = { ...product, qty })
-      //counts the total items added to the cart
-      tempCart.totalItems += qty
-      //dispatches and returns the updated cart to the redux store
-      dispatch(setCart(tempCart))
-      const updatedQty = tempCart.items[productId].qty
       dispatch(updateDBCart(auth.id, productId, updatedQty, productId))
-      return tempCart
     }
+    //now update the store and local storage
+    //copies the current cart
+    //checks for the item and updates quantity or adds the item to the cart
+    tempCart.items[productId]
+      ? (tempCart.items[productId].qty += qty)
+      : (tempCart.items[productId] = { ...product, qty })
+    //counts the total items added to the cart
+    tempCart.totalItems += qty
+    //dispatches and returns the updated cart to the redux store
+    dispatch(setCart(tempCart))
+    const updatedQty = tempCart.items[productId].qty
+
+    return tempCart
   }
 
   //this performs the basic function of adding to the cart in local storage, esp. useful for by users not logged in.

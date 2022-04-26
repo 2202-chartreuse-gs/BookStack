@@ -56,32 +56,31 @@ const Checkout = () => {
 
   return (
     <div>
-      {/* Hero unit */}
       <div className={classes.heroContent}>
         <Container maxWidth="sm">
-          {/* <Typography
+          <Typography
             component="h1"
             variant="h2"
             align="center"
             color="textPrimary"
             gutterBottom
           >
-            {firstName ? firstName : 'Guest'}
-          </Typography> */}
+            Thanks you!
+          </Typography>
           <Typography
             variant="h5"
             align="center"
             color="textSecondary"
             paragraph
           >
-            Thanks for shopping here!
+            We appreciate your buisness. Enjoy the books!
           </Typography>
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justifyContent="center">
               <Grid item>
-                <Link href="/products/">
+                <Link href="/">
                   <Button variant="contained" color="primary">
-                    View ALl Products
+                    Return Home
                   </Button>
                 </Link>
               </Grid>

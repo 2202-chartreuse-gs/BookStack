@@ -7,6 +7,10 @@
   font-family: Raleway, sans-serif;
 }
 
+div {
+  background-color: revert;
+}
+
 .container {
   display: flex;
   align-items: center;
@@ -121,7 +125,7 @@
   margin-top: 30px;
   padding: 16px 20px;
   border-radius: 26px;
-  border: 1px solid #d4d3e8;
+  border: 3px solid #4e4c73;
   text-transform: uppercase;
   font-weight: 700;
   display: flex;
@@ -131,6 +135,10 @@
   box-shadow: 0px 2px 2px #5c5696;
   cursor: pointer;
   transition: 0.2s;
+}
+
+button {
+  background-color: #276d7c !important;
 }
 
 .signin__submit:active,

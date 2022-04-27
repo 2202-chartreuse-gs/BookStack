@@ -38,8 +38,21 @@ p {
   color: #7bc233;
 }
 
+label,
+input {
+  color: #7bc233;
+  font-size: 1.1em;
+  padding: 0.25em;
+}
+
 button {
   background-color: #424242 !important;
+}
+
+span.MuiButton-label {
+  font-size: 1.1em;
+  font-weight: 700;
+  padding: 0.5em 1em;
 }
 
 a {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchProducts } from '../store/products'
-import { setCart, fetchCart, updateDBCart } from '../store/cart'
+import { fetchProducts } from '../../store/products'
+import { setCart, fetchCart, updateDBCart } from '../../store/cart'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import Link from '@material-ui/core/Link'
+import './index.css'
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -64,6 +65,8 @@ const useStyles = makeStyles((theme) => ({
 const AllProducts = () => {
   //useSelector hook pulls from Redux store
   let { products, cart, auth } = useSelector((store) => store)
+  const [search, setSearch] = useState('');
+
   //allows dispatch to Redux store
   const dispatch = useDispatch()
   //useEffect React hook
@@ -133,16 +136,29 @@ const AllProducts = () => {
     updateLocalCart(tempCart)
   }
 
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+  }
+
+  const filteredProducts = products.filter((product) => {
+    return product.title.toLowerCase().includes(search.toLowerCase())
+  })
+
   return (
     <>
-      <Link to="/add">
-        <button type="button" />
-      </Link>
+      <div className='product-app'>
+        <div className="product-search">
+          <h1 className='product-text'>Search a product</h1>
+            <form>
+              <input type="text" placeholder="Search a product" className="product-input" onChange={handleChange}/>
+            </form>
+        </div>
+      </div>
 
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
           {products ? (
-            products.map((product) => (
+            filteredProducts.map((product) => (
               <Grid item key={product.id} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia

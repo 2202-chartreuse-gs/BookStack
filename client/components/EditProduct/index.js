@@ -78,7 +78,9 @@ const EditProduct = props => {
       </div>
       <button type="submit">
       Edit Product</button>
-      <button type="button">
+      <button type="button" onClick={()=> {
+        dispatch(deleteProducts(singleProduct.id, history))
+      }}>
       Delete Product</button>
     </form>
     </>

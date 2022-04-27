@@ -56,7 +56,6 @@ export const addProducts = (product, history) => async (dispatch) => {
 
 export const editProducts = (product, history) => async (dispatch) => {
   try {
-    console.log("***  Test from edit ****", product)
     const token = window.localStorage.getItem(TOKEN)
     const { data } = await axios.put(`/api/products/${product.id}`, product, {
       headers: {
@@ -71,8 +70,17 @@ export const editProducts = (product, history) => async (dispatch) => {
   }
 }
 
-export const deleteProducts = () => async (dispatch) => {
+export const deleteProducts = (id, history) => async (dispatch) => {
   try {
+    const token = window.localStorage.getItem(TOKEN)
+    const { data } = await axios.delete(`/api/products/${id}`, {
+      headers: {
+        authorization: token,
+      }
+    })
+    history.push('/products')
+    dispatch(_deleteProducts(data))
+
 
   } catch (error) {
     console.log(error)
@@ -91,6 +99,10 @@ export default function productsReducer(state = [], action) {
     case EDIT_PRODUCT:
       return state.map(product => {
         product.id === action.product.id? (action.product): (product)
+      })
+    case DELETE_PRODUCT:
+      return state.filter(product => {
+        product.id !== action.product.id
       })
     default:
       return state

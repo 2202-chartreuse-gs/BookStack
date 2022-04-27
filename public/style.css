@@ -108,3 +108,9 @@ form div {
 
 
 } */
+
+#single-product-details {
+  text-align: center;
+  background-color: white;
+  max-width: 70%;
+}

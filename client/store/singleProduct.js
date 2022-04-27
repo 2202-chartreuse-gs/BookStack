@@ -1,4 +1,6 @@
 import axios from 'axios'
+const TOKEN = 'token'
+
 
 const SET_SINGLE_PRODUCT = 'SET_SINGLE_PRODUCT'
 

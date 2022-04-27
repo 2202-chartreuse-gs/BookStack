@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 const AllProducts = () => {
   //useSelector hook pulls from Redux store
   let { products, cart, auth } = useSelector((store) => store)
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('')
 
   //allows dispatch to Redux store
   const dispatch = useDispatch()
@@ -137,7 +137,7 @@ const AllProducts = () => {
   }
 
   const handleChange = (e) => {
-    setSearch(e.target.value);
+    setSearch(e.target.value)
   }
 
   const filteredProducts = products.filter((product) => {
@@ -146,12 +146,17 @@ const AllProducts = () => {
 
   return (
     <>
-      <div className='product-app'>
+      <div className="product-app">
         <div className="product-search">
-          <h1 className='product-text'>Search a product</h1>
-            <form>
-              <input type="text" placeholder="Search a product" className="product-input" onChange={handleChange}/>
-            </form>
+          <h2 className="product-text">Search for a product</h2>
+          <form>
+            <input
+              type="text"
+              placeholder="Book Title"
+              className="product-input"
+              onChange={handleChange}
+            />
+          </form>
         </div>
       </div>
 

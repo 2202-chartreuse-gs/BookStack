@@ -12,6 +12,7 @@ import AddProduct from './components/AddProduct'
 import Checkout from './components/Checkout'
 import EditProduct from './components/EditProduct'
 import Cart from './components/Cart'
+import AdminDashboard from './components/AdminDashboard'
 
 /**
  * COMPONENT
@@ -36,11 +37,8 @@ class Routes extends Component {
             <Route exact path="/add" component={AddProduct} />
             <Route exact path="/products" component={AllProducts} />
             <Route exact path="/cart" component={Cart} />
-            <Route
-              exact
-              path="/products/:productId"
-              component={SingleProduct}
-            />
+            <Route exact path="/products/:productId" component={SingleProduct} />
+            <Route exact path="/admin" component={AdminDashboard} />
             <Route path="/checkout" component={Checkout} />
           </Switch>
         ) : (

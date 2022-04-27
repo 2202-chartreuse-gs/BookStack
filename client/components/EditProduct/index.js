@@ -1,36 +1,41 @@
-import { Button } from '@material-ui/core'
-import React, { useRef, useState, useEffect, Component, Fragment } from 'react'
-import {connect} from 'react-redux'
-import { addProducts } from '../../store/products'
+import React, { Component, useState, useRef, useEffect } from 'react'
+import { fetchSingleProduct } from '../../store/singleProduct'
+import { editProducts, deleteProducts } from '../../store/products'
+import { useSelector, useDispatch } from 'react-redux'
 
 
-/**
- * Component
- */
 
-const AddProduct = props => {
-  //imageUrl , productUrl, title, author, price, description
-  const { handleSubmit } = props
+
+const EditProduct = props => {
+  const { history } = props
+  const dispatch = useDispatch()
+  let { singleProduct } = useSelector((store) => store)
+
   const userRef = useRef();
-  const [imageURL, setImageURL] = useState('')
-  const [productURL, setProductURL] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [price, setPrice] = useState(0)
-  const [description, setDescription] = useState('')
+  const [imageURL, setImageURL] = useState(singleProduct.imageURL)
+  const [productURL, setProductURL] = useState(singleProduct.productURL)
+  const [title, setTitle] = useState(singleProduct.title)
+  const [author, setAuthor] = useState(singleProduct.author)
+  const [price, setPrice] = useState(singleProduct.price)
+  const [description, setDescription] = useState(singleProduct.description)
 
   useEffect(() => {
     userRef.current.focus();
   },[])
 
-  // const clearState = () => {
-  //   setImageURL('')
-  //   setProductURL('')
-  //   setTitle('')
-  //   setAuthor('')
-  //   setPrice(0)
-  //   setDescription('')
-  // }
+  const handleSubmit = (evt) => {
+    evt.preventDefault()
+          const id = singleProduct.id
+          const imageURL = evt.target.imageURL.value
+          const productURL = evt.target.productURL.value
+          const title = evt.target.title.value
+          const author = evt.target.author.value
+          const price = evt.target.price.value
+          const description = evt.target.description.value
+
+          dispatch(editProducts({ id, imageURL, productURL, title, author, price, description }, history))
+  }
+
 
   return (
     <>
@@ -71,34 +76,21 @@ const AddProduct = props => {
         </label>
         <input name='description' type='text' placeholder='description' onChange={(evt) => setDescription(evt.target.value)} value={description} />
       </div>
-      <Button type="submit">
-      Add Product</Button>
+      <button type="submit">
+      Edit Product</button>
+      <button type="button" onClick={()=> {
+        dispatch(deleteProducts(singleProduct.id, history))
+      }}>
+      Delete Product</button>
     </form>
     </>
   )
 }
-
-const mapState = (state) => {
-  return {
-    products: state.products
-  }
-}
-const mapDispatch = (dispatch, { history }) => {
-  return {
-    handleSubmit(evt) {
-      evt.preventDefault()
-      const imageURL = evt.target.imageURL.value
-      const productURL = evt.target.productURL.value
-      const title = evt.target.title.value
-      const author = evt.target.author.value
-      const price = evt.target.price.value
-      const description = evt.target.description.value
-
-      dispatch(addProducts({imageURL, productURL, title, author, price, description }, history))
-
-    }
-  }
-}
+export default EditProduct
 
 
-export default connect(mapState, mapDispatch)(AddProduct)
+
+
+
+
+

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchSingleProduct } from '../store/singleProduct'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 const SingleProduct = () => {
   //allows dispatch to Redux store
@@ -14,7 +14,7 @@ const SingleProduct = () => {
     dispatch(fetchSingleProduct(productId))
   }, [])
 
-  let { singleProduct } = useSelector((store) => store)
+  let { singleProduct, auth } = useSelector((store) => store)
 
   return (
     <div id="single-product" className="column">
@@ -27,6 +27,17 @@ const SingleProduct = () => {
               <p>{singleProduct.descrption}</p>
               <p>{'$' + singleProduct.price / 100}</p>
               <img src={singleProduct.imageURL} />
+              <div>
+              <Link to={`/products/${singleProduct.id}/edit`}>
+                {auth.isAdmin ? (
+                  <button>
+                    Edit ME
+                  </button>
+                  ) : ( null )
+                }
+              </Link>
+
+              </div>
             </div>
           ) : (
             'Not Found'
@@ -36,5 +47,11 @@ const SingleProduct = () => {
     </div>
   )
 }
+
+// const mapState = (state) => {
+//   return {
+//     isAdmin: !!state.auth.isAdmin
+//   }
+// }
 
 export default SingleProduct

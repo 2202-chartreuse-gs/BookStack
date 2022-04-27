@@ -1,6 +1,6 @@
 'use strict'
 
-const productSeed = require('./productSeed.JSON')
+const productSeed = require('./productSeed')
 
 const hipsum = require('lorem-hipsum')
 const {

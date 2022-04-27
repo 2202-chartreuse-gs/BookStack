@@ -1,8 +1,6 @@
 import { Button } from '@material-ui/core'
 import React, { useRef, useState, useEffect, Component, Fragment } from 'react'
 import {connect} from 'react-redux'
-import { authenticate, products } from '../../store'
-// import './index.css'
 import { addProducts } from '../../store/products'
 
 

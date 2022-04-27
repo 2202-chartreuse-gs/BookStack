@@ -10,6 +10,8 @@ import SignupForm from './components/SignupForm'
 import LoginForm from './components/LoginForm'
 import AddProduct from './components/AddProduct'
 import Checkout from './components/Checkout'
+import EditProduct from './components/EditProduct'
+
 /**
  * COMPONENT
  */
@@ -29,6 +31,7 @@ class Routes extends Component {
             <Route path="/home" component={Home} />
             <Route path="/logout" component={Home} />
             <Route path="/users" component={AllUsers} />
+            <Route path="/products/:productId/edit" component={EditProduct} />
             <Route exact path="/add" component={AddProduct} />
             <Route exact path="/products" component={AllProducts} />
             <Route

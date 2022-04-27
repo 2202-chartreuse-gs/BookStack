@@ -81,10 +81,10 @@ const CartProducts = () => {
   const mapCartData = (cart) => {
     if (cart.items) {
       const array = []
+      setCartTotal(0)
       Object.keys(cart.items).forEach((productId) => {
         let item = cart.items[productId]
         array.push(item)
-        // cartArray.push(cart.items[productId])
         setCartTotal((prevTotal) => prevTotal + item.qty * item.price)
       })
       setCartArray([...array])
@@ -121,7 +121,7 @@ const CartProducts = () => {
           <ListItem className={classes.listItem}>
             <ListItemText primary="Total" />
             <Typography variant="subtitle1" className={classes.total}>
-              {`$ ${cartTotal / 100}`}
+              {`$ ${(cartTotal * 100) / 10000}`}
             </Typography>
           </ListItem>
         </List>

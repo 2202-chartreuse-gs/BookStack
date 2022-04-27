@@ -49,6 +49,7 @@
     "react-redux": "^7.0.1",
     "react-router-dom": "^5.0.0",
     "react-test-renderer": "^16.4.2",
+    "rechart": "^0.0.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.5",
     "redux-logger": "^3.0.6",
